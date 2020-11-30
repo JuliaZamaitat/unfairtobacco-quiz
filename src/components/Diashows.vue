@@ -2,7 +2,8 @@
   <div>
     <h1>Diashows</h1>
       <div class="diashow" v-for="diashow in diashows" :key="diashow.id">
-        <Diashow :id="diashow.ID"
+        <Diashow 
+          :id="diashow.ID"
           :title="diashow.post_name"
           :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
           :slides="diashow.acf.diashow_slides"

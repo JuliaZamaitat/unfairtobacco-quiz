@@ -1,27 +1,16 @@
 <template>
-  
-   
-    <div class="wrapper">
-         <!-- <h2>{{ title}}</h2>
-        <splide :options="options" @splide:moved="moved">
-        <splide-slide v-for="slide in slides" :key="slide.src">
-            <img :src="slide.src" alt="slide.alt">
-        </splide-slide>
-        </splide>   -->
+    <div>
+        <h2 @click="toggleSlides">{{ title }}</h2>
+        <Slider v-if="showSlider" @hide-slides="toggleSlides"></Slider>
     </div>
-
-
 </template>
 
 <script>
-// import { Splide, SplideSlide } from '@splidejs/vue-splide';
-import { createSlides } from "../utils/slides";
-
+import Slider from '@/components/Slider'
 
 export default {
     components: {
-        // Splide,
-        // SplideSlide,
+        Slider
     },
     name: 'Diashow',
     props: {
@@ -31,19 +20,16 @@ export default {
         sliderImagesAndTexts: Boolean,
         quiz: Array 
     },
-    data() {
+
+    data () {
         return {
-            options: {
-                rewind: true,
-                gap   : '1rem',
-            },
-            slides: createSlides(),
-        };
+            showSlider: false
+        }
     },
     methods: {
-        moved( splide, newIndex ) {
-            console.log( 'moved', newIndex );
-        },
+        toggleSlides () {
+            this.showSlider = !this.showSlider;
+         }
     },
 }
 </script>
