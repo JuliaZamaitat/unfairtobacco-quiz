@@ -1,19 +1,19 @@
 <template>
-<div class="background" @click.self="$emit('hide-slides')" >
-    <div class="wrapper">
+<div class="background" >
     <font-awesome-icon class="quit" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
+    <div class="wrapper">
         <splide :options="options">
-        <splide-slide v-for="slide in slides" :key="slide.src">
+        <splide-slide v-for="slide in slides" :key="slide.url">
             <div class="image" >
-                <img :src="slide.src" alt="slide.alt">
+                <img :src="slide.url" alt="slide.alt">
                 <div class="text-box-front" v-bind:class="{ 'is-left': textIsLeft }">
                      <p>Allein in Malawi arbeiten etwa 78.000 Kinder auf den Tabakplantagen. Aber auch in Brasilien, Indonesien, den USA und anderen Ländern ist Kinderarbeit im Tabakanbau weit verbreitet.</p>
                      <p>Das US-amerikanische Arbeitsministerium veröffentlicht jedes Jahr eine Liste der Waren, die mit Zwangs- und Kinderarbeit produziertwerden. Im Jahr 2016 standen für Tabak 16 Länder auf der Liste, die USA werden dort allerdings nicht genannt.</p>
                 </div>
             </div>   
             <div class="image-back" @click="turnImage">
-                <img :src="slide.src" alt="slide.alt" v-bind:class="{'hideImage': hideImage}">   
-                <div class="text-box-back" v-bind:class="{'isVisible': isVisible}" >
+                <img :src="slide.url" alt="slide.alt" v-bind:class="{'hide-image': hideImage}">   
+                <div class="text-box-back" v-bind:class="{'is-visible': isVisible}" >
                     <p>Allein in Malawi arbeiten etwa 78.000 Kinder auf den Tabakplantagen. Aber auch in Brasilien, Indonesien, den USA und anderen Ländern ist Kinderarbeit im Tabakanbau weit verbreitet.</p>
                     <p>Das US-amerikanische Arbeitsministerium veröffentlicht jedes Jahr eine Liste der Waren, die mit Zwangs- und Kinderarbeit produziertwerden. Im Jahr 2016 standen für Tabak 16 Länder auf der Liste, die USA werden dort allerdings nicht genannt.</p>
                 </div>
@@ -30,7 +30,7 @@
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
-import { createSlides } from "../utils/slides";
+// import { createSlides } from "../utils/slides";
 
 
 export default {
@@ -39,17 +39,32 @@ export default {
         SplideSlide,
     },
     name: 'Slider',
+    props: {
+        slidesAndTexts: [Array, Boolean]
+    },
     
     data() {
         return {
             options: {},
-            slides: createSlides(),
+            // slides: createSlides(),
             textIsLeft: true,
             mobileHidden: true,
             isVisible: false,
             hideImage: false
             
         };
+    },
+    computed: {
+        slides() { //TODO
+            const sliderImages = new Array()
+               console.log("slidesandtexts", this.slidesAndTexts)
+            if (Array.isArray(this.slidesAndTexts)) {
+                console.log("slidesandtexts", this.slidesAndTexts)
+                sliderImages.push(this.slidesAndTexts.forEach(slideWithText =>  slideWithText["diashow_bild"]["url"]))
+            }
+            console.log(sliderImages)
+            return sliderImages
+        }
     },
     methods: {
         turnImage() {
@@ -80,7 +95,7 @@ $breakpoint-phone: 430px;
 img {
     position: relative; 
     width: 80%;
-    height : auto;
+    height: auto;
 }
 
 .text-box-front {
@@ -98,9 +113,10 @@ img {
 
 
 .text-box-back {
-    background: rgba(97, 97, 97, 0.84);
-    width: 100%;
-    min-height: 100%;
+    background: rgba(143, 44, 27, 1);
+    width: 80%;
+    margin: 0 auto;
+    min-height: 380px;
  }
 
 
@@ -137,6 +153,10 @@ p  {
   img {
       width: 70%
   }
+
+  .text-box-back {
+      width: 70%
+  }
   .quit {
       top: 1em;
       right: 1em;
@@ -150,11 +170,7 @@ p  {
          display: none;
      }
 
-     .image-back  {
-         display: block;
-     }
-
-     .hideImage {
+     .hide-image {
          display: none;
      }
 
@@ -162,13 +178,18 @@ p  {
         display: none;
     }
 
-     .isVisible {
+     .image-back  {
+         display: block;
+     }
+
+     .is-visible {
          display: block;
     }
         
+   
 
-    .turn-around {
-         transform: rotateY(180deg);
+    p {
+        font-size: 11px;
     }
     
 }
@@ -180,11 +201,7 @@ p  {
          display: none;
      }
 
-     .image-back  {
-         display: block;
-     }
-
-     .hideImage {
+     .hide-image {
          display: none;
      }
 
@@ -192,7 +209,11 @@ p  {
         display: none;
     }
 
-     .isVisible {
+     .image-back  {
+         display: block;
+     }
+
+     .is-visible {
          display: block;
     }
     

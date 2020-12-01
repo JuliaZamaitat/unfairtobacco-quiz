@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <h2 @click="toggleSlides">{{ title }}</h2>
-        <Slider v-if="showSlider" @hide-slides="toggleSlides"></Slider>
+    <div class="diashow" @click.self="toggleSlides" >
+        <h2 >{{ title }}</h2>
+        <Slider v-if="showSlider" @hide-slides="toggleSlides" :slidesAndTexts="slidesAndStuff"></Slider>
     </div>
 </template>
 
@@ -17,8 +17,8 @@ export default {
         id: Number,
         title: String,
         classLevel: String,
-        sliderImagesAndTexts: Boolean,
-        quiz: Array 
+        slides: [Array, Boolean],
+        quiz: [Array, Boolean]
     },
 
     data () {
@@ -28,12 +28,51 @@ export default {
     },
     methods: {
         toggleSlides () {
+            console.log("toggle", this.id)
             this.showSlider = !this.showSlider;
          }
     },
+    computed: {
+        slidesAndStuff() {
+            return this.slides
+        }
+    }
 }
 </script>
 
 <style lang="scss" scoped>
+
+h2 {
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: hsla(0,0%,100%,.85);
+    padding: .3em .7em;
+    max-width: 80%;
+    min-width: 60%;
+    font-family: Lato, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.diashow {
+    position: relative;
+    background-image: url(https://www.zeitenspiegel.de/image/2/625/410/5/media/images/malawi-tabak_neon03-11.jpg);
+    height: 318px;
+    width: 387px;
+    
+}
+
+.diashow:hover h2 {
+   background-color: hsla(0,0%,100%,1);
+}
+
+
 
 </style>
