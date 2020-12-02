@@ -1,28 +1,24 @@
 <template>
 <div class="background" >
     <font-awesome-icon class="quit" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
-    <div class="wrapper">
         <splide :options="options">
-        <splide-slide v-for="slide in slides" :key="slide.url">
+        <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
             <div class="image" >
-                <img :src="slide.url" alt="slide.alt">
-                <div class="text-box-front" v-bind:class="{ 'is-left': textIsLeft }">
-                     <p>Allein in Malawi arbeiten etwa 78.000 Kinder auf den Tabakplantagen. Aber auch in Brasilien, Indonesien, den USA und anderen Ländern ist Kinderarbeit im Tabakanbau weit verbreitet.</p>
-                     <p>Das US-amerikanische Arbeitsministerium veröffentlicht jedes Jahr eine Liste der Waren, die mit Zwangs- und Kinderarbeit produziertwerden. Im Jahr 2016 standen für Tabak 16 Länder auf der Liste, die USA werden dort allerdings nicht genannt.</p>
+                <img :src="slide.imageURL" :alt="slide.imageAlt">
+                <div class="text-box-front" v-bind:class="{ 'is-left': slide.position }">
+                     <p v-html="slide.text"></p>
                 </div>
             </div>   
             <div class="image-back" @click="turnImage">
-                <img :src="slide.url" alt="slide.alt" v-bind:class="{'hide-image': hideImage}">   
+                <img :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'hide-image': hideImage}">   
                 <div class="text-box-back" v-bind:class="{'is-visible': isVisible}" >
-                    <p>Allein in Malawi arbeiten etwa 78.000 Kinder auf den Tabakplantagen. Aber auch in Brasilien, Indonesien, den USA und anderen Ländern ist Kinderarbeit im Tabakanbau weit verbreitet.</p>
-                    <p>Das US-amerikanische Arbeitsministerium veröffentlicht jedes Jahr eine Liste der Waren, die mit Zwangs- und Kinderarbeit produziertwerden. Im Jahr 2016 standen für Tabak 16 Länder auf der Liste, die USA werden dort allerdings nicht genannt.</p>
+                     <p v-html="slide.text"></p>
                 </div>
             </div>
 
         </splide-slide>
         </splide>  
     </div>
-</div>
 
 </template>
 
@@ -40,13 +36,15 @@ export default {
     },
     name: 'Slider',
     props: {
-        slidesAndTexts: [Array, Boolean]
+        slides: [Array, Boolean]
     },
     
     data() {
         return {
-            options: {},
-            // slides: createSlides(),
+            options: {
+          
+
+            },
             textIsLeft: true,
             mobileHidden: true,
             isVisible: false,
@@ -55,15 +53,20 @@ export default {
         };
     },
     computed: {
-        slides() { //TODO
-            const sliderImages = new Array()
-               console.log("slidesandtexts", this.slidesAndTexts)
-            if (Array.isArray(this.slidesAndTexts)) {
-                console.log("slidesandtexts", this.slidesAndTexts)
-                sliderImages.push(this.slidesAndTexts.forEach(slideWithText =>  slideWithText["diashow_bild"]["url"]))
+        slidesAndTexts() { 
+            const slidesAndTexts = new Array()
+            if (Array.isArray(this.slides)) {
+                for(var slide in this.slides){
+                    slidesAndTexts.push({
+                        position: this.slides[slide].diashow_position_text[0] === "links",
+                        text: this.slides[slide].diashow_text,
+                        imageURL: this.slides[slide].diashow_bild.sizes["1536x1536"],
+                        imageAlt: this.slides[slide].diashow_bild.alt
+                    })
+                }
             }
-            console.log(sliderImages)
-            return sliderImages
+            console.log(slidesAndTexts)
+            return slidesAndTexts
         }
     },
     methods: {
@@ -76,32 +79,40 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-$breakpoint-phone: 430px;
 
 .background {
     position: fixed;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     left: 0;
     top: 0;
     background: rgba(0,0,0,1);
     z-index: 10;
+    
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow: auto;
 }
 
+
 img {
-    position: relative; 
+    position: relative;
     width: 80%;
-    height: auto;
+    height: 100%;
+    object-fit: cover; 
 }
 
+.image {
+    object-fit: cover;
+    height: 100%; 
+}
+
+
 .text-box-front {
-   position: absolute; 
+    position: absolute; 
     bottom: 27px; 
-    right: 22px;
+    right: 12%;
     background: rgba(97, 97, 97, 0.84);
     width: 550px;
     min-height: 220px;
@@ -109,6 +120,8 @@ img {
 
 .image-back {
     display: none;
+    object-fit: cover;
+    height: 100%; 
 }
 
 
@@ -116,9 +129,8 @@ img {
     background: rgba(143, 44, 27, 1);
     width: 80%;
     margin: 0 auto;
-    min-height: 380px;
+    height: 100%;
  }
-
 
 
 .is-left {
@@ -139,6 +151,7 @@ p  {
 }
 
 .quit {
+    z-index: 5000;
     position: absolute;
     top: 0.5em;
     right: 0.5em;
@@ -149,19 +162,12 @@ p  {
     color: rgb(255, 255, 255, 0.7);
 }
 
-@media (max-width: $breakpoint-phone) {
-  img {
-      width: 70%
-  }
 
-  .text-box-back {
-      width: 70%
-  }
-  .quit {
-      top: 1em;
-      right: 1em;
-  }
-}
+$breakpoint-phone: 430px;
+
+
+
+
 
 // Smartphone & Tablet Portrait
 @media only screen and (max-width : 1023px) and (orientation: portrait)
@@ -186,13 +192,42 @@ p  {
          display: block;
     }
         
-   
 
     p {
         font-size: 11px;
     }
+
     
 }
+
+
+//Smartphone Portrait smaller
+@media only screen and (max-width: $breakpoint-phone) and (orientation: portrait) {
+
+
+  .text-box-back {
+      width: 70%
+  }
+  .quit {
+      top: 1em;
+      right: 1em;
+  }
+}
+
+
+
+// Tablet Landscape
+@media only screen and (max-width: 850px) and (orientation: landscape) {
+    .text-box-front {
+       min-height: 100px;
+       width: 400px;
+    }
+    p {
+       font-size: 10px;
+    }
+   
+}
+
 
 // Smartphone Landscape
 @media only screen and (max-width: 850px) and (max-height: 450px)
@@ -216,22 +251,8 @@ p  {
      .is-visible {
          display: block;
     }
-    
+
 }
-
-// Tablet Landscape
-@media only screen and (max-width: 850px) and (orientation: landscape) {
-    .text-box-front {
-       min-height: 100px;
-       width: 400px;
-    }
-    p {
-       font-size: 10px;
-    }
-}
-
-
-
 
        
 </style>

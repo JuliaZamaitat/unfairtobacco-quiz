@@ -1,7 +1,7 @@
 <template>
     <div class="diashow" @click.self="toggleSlides" >
         <h2 >{{ title }}</h2>
-        <Slider v-if="showSlider" @hide-slides="toggleSlides" :slidesAndTexts="slidesAndStuff"></Slider>
+        <Slider v-if="showSlider" @hide-slides="toggleSlides" :slides="slides"></Slider>
     </div>
 </template>
 
@@ -31,11 +31,6 @@ export default {
             console.log("toggle", this.id)
             this.showSlider = !this.showSlider;
          }
-    },
-    computed: {
-        slidesAndStuff() {
-            return this.slides
-        }
     }
 }
 </script>
