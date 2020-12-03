@@ -1,21 +1,37 @@
 <template>
 <div class="background" >
+    
     <font-awesome-icon class="quit" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
             <div class="image" >
                 <img :src="slide.imageURL" :alt="slide.imageAlt">
                 <div class="text-box-front" v-bind:class="{ 'is-left': slide.position }">
-                     <p v-html="slide.text"></p>
+                    <p class="slider-text" v-html="slide.text"></p>
                 </div>
             </div>   
             <div class="image-back" @click="turnImage">
                 <img :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'hide-image': hideImage}">   
                 <div class="text-box-back" v-bind:class="{'is-visible': isVisible}" >
-                     <p v-html="slide.text"></p>
+                    <p class="slider-text" v-html="slide.text"></p>
                 </div>
             </div>
-
+        </splide-slide>
+        <splide-slide >    
+            <div class="lastSlide">
+                <div class="container">
+                        <h2>Lust auf ein kleines Quiz?</h2>
+                        <p class="link-text">Teste hier dein Wissen</p>
+                        <iframe width="70%" height="400px" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+                            <p class="follow">Folge uns auf</p>
+                            <div class="social-media">
+                                <font-awesome-icon class="social-icons facebook" :icon="['fab', 'facebook-square']" />
+                                <font-awesome-icon class="social-icons instagram" :icon="['fab', 'instagram-square']" />
+                                <font-awesome-icon class="social-icons twitter" :icon="['fab', 'twitter-square']" />
+                                <font-awesome-icon class="social-icons youtube" :icon="['fab', 'youtube-square']" />
+                            </div>
+                </div>
+            </div>
         </splide-slide>
         </splide>  
     </div>
@@ -80,6 +96,58 @@ export default {
 <style lang="scss" scoped>
 
 
+.social-media{
+    padding-bottom: 2em;
+}
+
+.social-icons {
+    width: 50px;
+    height: 50px;
+    color: white;
+    padding: 0 0.4em;
+}
+
+.lastSlide {
+    position: relative;
+    background-color: rgba(143, 44, 27, 1);
+    height: 100%; 
+    width: 80%;
+    margin: 0 auto;
+
+}
+
+
+h2 {
+    font-family: Lato, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2.3em;
+    color: #FFFFFF;
+    margin: 0;
+    padding-top: 7%;
+
+}
+
+.link-text {
+    font-family: Lato, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.8em;
+    line-height: 131%;
+    color: #FFFFFF;
+    padding-bottom: 1em;
+}
+
+.follow {
+    font-family: Lato, sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: #FFFFFF;
+    padding-top: 1em;
+
+}
+
 .background {
     position: fixed;
     width: 100vw;
@@ -138,7 +206,7 @@ img {
     left: 12%; 
 }
 
-p  { 
+.slider-text  { 
    font-family: Lato, sans-serif;
     font-style: normal;
     font-weight: 550;
@@ -193,7 +261,7 @@ $breakpoint-phone: 430px;
     }
         
 
-    p {
+    .slider-text {
         font-size: 11px;
     }
 
@@ -222,7 +290,7 @@ $breakpoint-phone: 430px;
        min-height: 100px;
        width: 400px;
     }
-    p {
+    .slider-text {
        font-size: 10px;
     }
    
