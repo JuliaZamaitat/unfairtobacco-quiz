@@ -1,6 +1,5 @@
 <template>
 <div class="background" >
-    
     <font-awesome-icon class="quit" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
@@ -149,18 +148,20 @@ h2 {
 }
 
 .background {
-    position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+
+    position: fixed;
+    
     left: 0;
     top: 0;
     background: rgba(0,0,0,1);
     z-index: 10;
-    
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: auto;
 }
 
 
