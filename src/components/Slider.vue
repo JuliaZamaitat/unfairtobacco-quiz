@@ -97,7 +97,7 @@ export default {
 
 
 .slider {
-    &--background {  //correct
+    &--background {  
         position: fixed;
         width: 100%;
         height: 100%;
@@ -107,7 +107,7 @@ export default {
         z-index: 10;
     }
 
-    &__quit-button { //correct
+    &__quit-button { 
         z-index: 500000;
         position: absolute;
         top: 0.5em;
@@ -119,11 +119,11 @@ export default {
         }
     }
 
-    .splide {  //correct
+    .splide {  
         margin: 0 auto;
     }
 
-    &__image { //correct
+    &__image { 
         position: absolute;
         width: 80%;
         height: 80%;
@@ -141,7 +141,7 @@ export default {
         display: none;
     }
 
-    &__text-box-front {//correct
+    &__text-box-front {
         position: absolute; 
         bottom: 12%; 
         right: 12%;
@@ -150,13 +150,13 @@ export default {
         min-height: 220px;
     }
 
-    &--is-left {  //correct
+    &--is-left {  
         right: initial;
         left: 12%; 
     }
 
 
-    &__text-box-back { //correct
+    &__text-box-back { 
         position: absolute;
         width: 80%;
         height: 80%;
@@ -170,7 +170,7 @@ export default {
         
     }
 
-    &__text { //correct
+    &__text { 
         font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: 550;
@@ -188,9 +188,13 @@ export default {
     &__container {
         height: 100%;
         max-height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     &__heading {
+        min-width: 0;
+        min-height: 0;   
         font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: bold;
@@ -201,6 +205,8 @@ export default {
     }
 
     &__link-text {
+        min-width: 0;
+        min-height: 0;   
         font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: bold;
@@ -210,6 +216,8 @@ export default {
     }   
 
     &__follow {
+        min-width: 0;
+        min-height: 0;   
         font-family: Lato, sans-serif;
         font-style: italic;
         font-weight: bold;
@@ -218,24 +226,33 @@ export default {
         padding-top: 1em;
     }
 
+    //TODO
     &__social-media-icons {
+      
+        margin: 0 auto;
         padding-bottom: 2em;
+        
+       
     }
     
+     //TODO
     &__icon {
-        width: 5%;
-        height: 5%;
+        // min-width: 0;
+        // min-height: 0;   
         color: white;
-        padding: 0 0.4em;
     }
 
     &__video-container {
-      width: 100%;
-      margin: 0 auto;
-      height: 50%;
+        min-width: 0;
+        min-height: 0;   
+        width: 100%;
+        margin: 0 auto;
+        height: 50%;
     }
 
     &__video {
+        min-width: 0;
+        min-height: 0;   
         width: 60%;
         height: 100%;
     }
@@ -253,7 +270,7 @@ $breakpoint-phone: 430px;
             max-height: 40%;
         }
 
-        &__text-box-front {//correct
+        &__text-box-front {
             position: absolute; 
             bottom: 32%; 
             right: 12%;
@@ -309,110 +326,28 @@ $breakpoint-phone: 430px;
             display: none;
         }
 
-        &__text { //correct
+        &__text { 
             font-size: 18px;
-        }
-
-        
-
-        
-        
-    }
-}
-
-@media only screen and (max-height: 500px) and (orientation: landscape) {
-    .slider{
-        &__container {
-            height: 100%;
-            max-height: 100%;
-        }
-
-        &__heading {
-            font-size: 0.9em;
-        }
-
-        &__link-text {
-            font-size: 0.7em;
-        }   
-
-        &__follow {
-            padding-top: 0;
-            font-size: 0.7em;
-        }
-
-        &__social-media-icons {
-            padding-bottom: 1em;
-        }
-        
-        &__icon {
-            width: 6%;
-            padding: 0 0.2em;
-        }
-
-        &__video {
-            width: 60%;
-            height: 100%;
-        }
-    }
-}
-
-
-@media only screen and (max-width: 760px) and (orientation: portrait) {
-    .slider{
-        &__container {
-            height: 100%;
-            max-height: 100%;
-        }
-
-        &__heading {
-            font-size: 0.9em;
-        }
-
-        &__link-text {
-            font-size: 0.7em;
-        }   
-
-        &__follow {
-            font-size: 0.7em;
-        }
-
-        &__social-media-icons {
-            padding-bottom: 1em;
-        }
-        
-        &__icon {
-            width: 13%;
-        }
-
-        &__video {
-            width: 50%;
-            height: 100%;
-        }
+        }     
     }
 }
 
 @media only screen and (max-width: 700px) and (orientation: portrait) {
     .slider {
-        &__text { //correct
+        &__text { 
             font-size: 14px;
         }
-    }
-        
+    } 
 }
 
 @media only screen and (max-width: 500px) and (orientation: portrait) {
     .slider {
-        &__text { //correct
+        &__text { 
             font-size: 11px;
         }
     }
         
 }
-
-
-
-
-
 
 //Smartphone Portrait smaller
 @media only screen and (max-width: $breakpoint-phone) and (orientation: portrait) {
@@ -445,9 +380,6 @@ $breakpoint-phone: 430px;
 }
 
 
-
-
-
 // Tablet Landscape
 @media only screen and (max-width: 850px) and (orientation: landscape) {
     .slider {
@@ -457,7 +389,6 @@ $breakpoint-phone: 430px;
         
     }  
 }
-
 
 // Smartphone Landscape
 @media only screen and (max-width: 850px) and (max-height: 450px)
