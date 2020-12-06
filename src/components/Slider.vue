@@ -1,39 +1,39 @@
 <template>
-<div class="background" >
-    <font-awesome-icon class="quit" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
+<div class="slider slider--background" >
+    <font-awesome-icon class="slider slider__quit-button" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
-            <div class="image" >
-                <img :src="slide.imageURL" :alt="slide.imageAlt">
-                <div class="text-box-front" v-bind:class="{ 'is-left': slide.position }">
-                    <p class="slider-text" v-html="slide.text"></p>
+                <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
+                <div class="slider slider__text-box-front" v-bind:class="{ 'slider--is-left': slide.position }">
+                    <p class="slider slider__text" v-html="slide.text"></p>
                 </div>
-            </div>   
-            <div class="image-back" @click="turnImage">
-                <img :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'hide-image': hideImage}">   
-                <div class="text-box-back" v-bind:class="{'is-visible': isVisible}" >
-                    <p class="slider-text" v-html="slide.text"></p>
+            <div class="slider slider__image slider__image-back" @click="turnImage" >  
+                <img class="slider slider__image" :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'slider--hide-image': hideImage}" >   
+                <div class="slider slider__text-box-back" v-bind:class="{'slider--text-is-visible': isVisible}" >
+                    <p class="slider slider__text" v-html="slide.text"></p>
                 </div>
             </div>
         </splide-slide>
         <splide-slide >    
-            <div class="lastSlide">
-                <div class="container">
-                        <h2>Lust auf ein kleines Quiz?</h2>
-                        <p class="link-text">Teste hier dein Wissen</p>
-                        <iframe width="70%" height="400px" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-                            <p class="follow">Folge uns auf</p>
-                            <div class="social-media">
-                                <font-awesome-icon class="social-icons facebook" :icon="['fab', 'facebook-square']" />
-                                <font-awesome-icon class="social-icons instagram" :icon="['fab', 'instagram-square']" />
-                                <font-awesome-icon class="social-icons twitter" :icon="['fab', 'twitter-square']" />
-                                <font-awesome-icon class="social-icons youtube" :icon="['fab', 'youtube-square']" />
-                            </div>
+            <div class="slider slider__image slider__lastSlide">
+                <div class="slider slider__container">
+                    <h2 class="slider slider__heading">Lust auf ein kleines Quiz?</h2>
+                    <p class="slider slider__link-text">Teste hier dein Wissen</p>
+                    <div class="slider slider__video-container">
+                        <iframe class="slider slider__video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+                    </div>    
+                    <p class="slider slider__follow">Folge uns auf</p>
+                    <div class="slider slider__social-media-icons">
+                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'facebook-square']" />
+                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'instagram-square']" />
+                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'twitter-square']" />
+                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'youtube-square']" />
+                    </div>
                 </div>
             </div>
         </splide-slide>
-        </splide>  
-    </div>
+    </splide>  
+</div>
 
 </template>
 
@@ -41,8 +41,6 @@
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
 
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
-// import { createSlides } from "../utils/slides";
-
 
 export default {
     components: {
@@ -56,15 +54,17 @@ export default {
     
     data() {
         return {
-            options: {
-          
-
-            },
             textIsLeft: true,
             mobileHidden: true,
             isVisible: false,
-            hideImage: false
-            
+            hideImage: false,
+            options: {
+                height: '100vh',
+                width: '90vw',
+                classes: {
+                    arrows: 'splide__arrows splide__arrows--mobile',
+                }
+            },
         };
     },
     computed: {
@@ -95,234 +95,404 @@ export default {
 <style lang="scss" scoped>
 
 
-.social-media{
-    padding-bottom: 2em;
-}
 
-.social-icons {
-    width: 50px;
-    height: 50px;
-    color: white;
-    padding: 0 0.4em;
-}
+.slider {
+    &--background {  //correct
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background: rgba(0,0,0,1);
+        z-index: 10;
+    }
 
-.lastSlide {
-    position: relative;
-    background-color: rgba(143, 44, 27, 1);
-    height: 100%; 
-    width: 80%;
-    margin: 0 auto;
+    &__quit-button { //correct
+        z-index: 500000;
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+        color: rgb(255, 255, 255, 0.5);
 
-}
+        &:hover {
+            color: rgb(255, 255, 255, 0.7);
+        }
+    }
+
+    .splide {  //correct
+        margin: 0 auto;
+    }
+
+    &__image { //correct
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        max-height: 80%;
+        top: 50%;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        transform: translateY(-50%);
+        object-fit: cover;
+        object-position: center; 
+    }
+
+    &__image-back {
+        display: none;
+    }
+
+    &__text-box-front {//correct
+        position: absolute; 
+        bottom: 12%; 
+        right: 12%;
+        background: rgba(97, 97, 97, 0.84);
+        max-width: 40%;
+        min-height: 220px;
+    }
+
+    &--is-left {  //correct
+        right: initial;
+        left: 12%; 
+    }
 
 
-h2 {
-    font-family: Lato, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 2.3em;
-    color: #FFFFFF;
-    margin: 0;
-    padding-top: 7%;
+    &__text-box-back { //correct
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        top: 50%;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        transform: translateY(-50%);
+        display: none;
+        background: rgba(143, 44, 27, 1);
+        
+    }
 
-}
+    &__text { //correct
+        font-family: Lato, sans-serif;
+        font-style: normal;
+        font-weight: 550;
+        font-size: 16px;
+        line-height: 131%;
+        color: #FFFFFF;
+        text-align: left;
+        padding: 0 1em;
+    }
 
-.link-text {
-    font-family: Lato, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 1.8em;
-    line-height: 131%;
-    color: #FFFFFF;
-    padding-bottom: 1em;
-}
+    &__lastSlide {
+        background-color: rgba(143, 44, 27, 1);
+    }
 
-.follow {
-    font-family: Lato, sans-serif;
-    font-style: italic;
-    font-weight: bold;
-    font-size: 1.5em;
-    color: #FFFFFF;
-    padding-top: 1em;
+    &__container {
+        height: 100%;
+        max-height: 100%;
+    }
 
-}
+    &__heading {
+        font-family: Lato, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 2.3em;
+        color: #FFFFFF;
+        margin: 0;
+        padding-top: 3%;
+    }
 
-.background {
-    width: 100vw;
-    height: 100%;
-    min-height: 100%;
-    box-sizing: border-box;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    &__link-text {
+        font-family: Lato, sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 1.8em;
+        line-height: 131%;
+        color: #FFFFFF;
+    }   
 
+    &__follow {
+        font-family: Lato, sans-serif;
+        font-style: italic;
+        font-weight: bold;
+        font-size: 1.5em;
+        color: #FFFFFF;
+        padding-top: 1em;
+    }
 
-    position: fixed;
+    &__social-media-icons {
+        padding-bottom: 2em;
+    }
     
-    left: 0;
-    top: 0;
-    background: rgba(0,0,0,1);
-    z-index: 10;
-}
+    &__icon {
+        width: 5%;
+        height: 5%;
+        color: white;
+        padding: 0 0.4em;
+    }
 
+    &__video-container {
+      width: 100%;
+      margin: 0 auto;
+      height: 50%;
+    }
 
-img {
-    position: relative;
-    width: 80%;
-    height: 100%;
-    object-fit: cover; 
-}
-
-.image {
-    object-fit: cover;
-    height: 100%; 
-}
-
-
-.text-box-front {
-    position: absolute; 
-    bottom: 27px; 
-    right: 12%;
-    background: rgba(97, 97, 97, 0.84);
-    width: 550px;
-    min-height: 220px;
-}
-
-.image-back {
-    display: none;
-    object-fit: cover;
-    height: 100%; 
-}
-
-
-.text-box-back {
-    background: rgba(143, 44, 27, 1);
-    width: 80%;
-    margin: 0 auto;
-    height: 100%;
- }
-
-
-.is-left {
-    right: initial;
-    left: 12%; 
-}
-
-.slider-text  { 
-   font-family: Lato, sans-serif;
-    font-style: normal;
-    font-weight: 550;
-    font-size: 16px;
-    line-height: 131%;
-    color: #FFFFFF;
-    text-align: left;
-    padding: 0 1em;
+    &__video {
+        width: 60%;
+        height: 100%;
+    }
 
 }
-
-.quit {
-    z-index: 5000;
-    position: absolute;
-    top: 0.5em;
-    right: 0.5em;
-    color: rgb(255, 255, 255, 0.5);
-}
-
-.quit:hover {
-    color: rgb(255, 255, 255, 0.7);
-}
-
 
 $breakpoint-phone: 430px;
 
 
+@media  only screen and (max-width : 1200px) and (orientation: portrait){
+ .slider {
+         &__image { 
+            width: 80%;
+            height: 40%;
+            max-height: 40%;
+        }
 
+        &__text-box-front {//correct
+            position: absolute; 
+            bottom: 32%; 
+            right: 12%;
+            background: rgba(97, 97, 97, 0.84);
+            max-width: 40%;
+            min-height: 220px;
+        }
+
+         &__heading {
+            font-size: 2em;
+        }
+         &__link-text {
+            font-size: 1.5em;
+        } 
+         &__follow {
+            font-size: 1em;
+        }  
+
+ }
+}
 
 
 // Smartphone & Tablet Portrait
-@media only screen and (max-width : 1023px) and (orientation: portrait)
- {
-     .image {
-         display: none;
-     }
+@media only screen and (max-width : 1023px) and (orientation: portrait) {
+    .slider {
+         &__image { 
+            width: 90%;
+            height: 60%;
+            max-height: 60%;
+        }
 
-     .hide-image {
-         display: none;
-     }
+        &__text-box-back { 
+            width: 90%;
+            height: 60%;
+        }
 
-     .text-box-back {
-        display: none;
-    }
+        &__image-front {
+            display: none;
+        }
 
-     .image-back  {
-         display: block;
-     }
+        &__text-box-front {
+            display: none;
+        }
 
-     .is-visible {
-         display: block;
-    }
+        &--text-is-visible {
+            display: block;
+        }
+
+        &__image-back  {
+            display: block;
+        }
+         &--hide-image {
+            display: none;
+        }
+
+        &__text { //correct
+            font-size: 18px;
+        }
+
         
 
-    .slider-text {
-        font-size: 11px;
+        
+        
     }
-
-    
 }
+
+@media only screen and (max-height: 500px) and (orientation: landscape) {
+    .slider{
+        &__container {
+            height: 100%;
+            max-height: 100%;
+        }
+
+        &__heading {
+            font-size: 0.9em;
+        }
+
+        &__link-text {
+            font-size: 0.7em;
+        }   
+
+        &__follow {
+            padding-top: 0;
+            font-size: 0.7em;
+        }
+
+        &__social-media-icons {
+            padding-bottom: 1em;
+        }
+        
+        &__icon {
+            width: 6%;
+            padding: 0 0.2em;
+        }
+
+        &__video {
+            width: 60%;
+            height: 100%;
+        }
+    }
+}
+
+
+@media only screen and (max-width: 760px) and (orientation: portrait) {
+    .slider{
+        &__container {
+            height: 100%;
+            max-height: 100%;
+        }
+
+        &__heading {
+            font-size: 0.9em;
+        }
+
+        &__link-text {
+            font-size: 0.7em;
+        }   
+
+        &__follow {
+            font-size: 0.7em;
+        }
+
+        &__social-media-icons {
+            padding-bottom: 1em;
+        }
+        
+        &__icon {
+            width: 13%;
+        }
+
+        &__video {
+            width: 50%;
+            height: 100%;
+        }
+    }
+}
+
+@media only screen and (max-width: 700px) and (orientation: portrait) {
+    .slider {
+        &__text { //correct
+            font-size: 14px;
+        }
+    }
+        
+}
+
+@media only screen and (max-width: 500px) and (orientation: portrait) {
+    .slider {
+        &__text { //correct
+            font-size: 11px;
+        }
+    }
+        
+}
+
+
+
+
 
 
 //Smartphone Portrait smaller
 @media only screen and (max-width: $breakpoint-phone) and (orientation: portrait) {
+    .splide__arrows--mobile { //not working
+        display: none !important;
+    }
 
+    .slider {
+        &__image { 
+            width: 100%;
+            height: 60%;
+            max-height: 60%;
+        }
 
-  .text-box-back {
-      width: 70%
-  }
-  .quit {
-      top: 1em;
-      right: 1em;
-  }
+        &__text-box-back { 
+            width: 100%;
+            height: 60%;
+        }
+
+        &__text { 
+            font-size: 12px;
+        }
+
+        &__quit-button {
+            top: 1em;
+            right: 1em;
+        }
+        
+    }
 }
+
+
 
 
 
 // Tablet Landscape
 @media only screen and (max-width: 850px) and (orientation: landscape) {
-    .text-box-front {
-       min-height: 100px;
-       width: 400px;
-    }
-    .slider-text {
-       font-size: 10px;
-    }
-   
+    .slider {
+          &__text { 
+            font-size: 11px;
+        }
+        
+    }  
 }
 
 
 // Smartphone Landscape
 @media only screen and (max-width: 850px) and (max-height: 450px)
  and (orientation: landscape) {
-      .image {
-         display: none;
-     }
+    .slider {
+        &__image-front {
+            display: none;
+        }
 
-     .hide-image {
-         display: none;
-     }
+        &--hide-image {
+            display: none;
+        }
 
-     .text-box-back {
-        display: none;
+        &__text-box-back {
+            display: none;
+        }
+
+        &__image-back  {
+            display: block;
+        }
+
+        &__text-box-front {
+            display: none;
+        }
+
+        &--text-is-visible {
+            display: block;
+        }
+
+        &__text { 
+            font-size: 14px;
+        }
+
     }
-
-     .image-back  {
-         display: block;
-     }
-
-     .is-visible {
-         display: block;
-    }
-
 }
 
-       
 </style>
 
