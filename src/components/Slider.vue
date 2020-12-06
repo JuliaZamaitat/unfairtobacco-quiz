@@ -181,6 +181,10 @@ export default {
         padding: 0 1em;
     }
 
+
+
+   /* Last Slide */
+
     &__lastSlide {
         background-color: rgba(143, 44, 27, 1);
     }
@@ -226,20 +230,10 @@ export default {
         padding-top: 1em;
     }
 
-    //TODO
-    &__social-media-icons {
-      
-        margin: 0 auto;
-        padding-bottom: 2em;
-        
-       
-    }
-    
-     //TODO
-    &__icon {
-        // min-width: 0;
-        // min-height: 0;   
+    &__icon { 
         color: white;
+        font-size: 3em;
+        margin: 0.2em 0.2em;
     }
 
     &__video-container {
