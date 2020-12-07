@@ -1,7 +1,7 @@
 <template>
     <div class="diashow diashow--diashow" @click.self="toggleSlides" >
         <h2 class="diashow diashow__title">{{ title }}</h2>
-        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :quiz="quiz"></Slider>
+        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz"></Slider>
     </div>
 </template>
 

@@ -18,7 +18,7 @@
             <div class="slider slider__image slider__lastSlide">    
                 <div class="slider slider__container">
                     <h2 class="slider slider__heading">Lust auf ein kleines Quiz?</h2>
-                    <p class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
+                    <p class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz, title: title }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
                     <div class="slider slider__video-container">
                         <iframe class="slider slider__video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
                     </div>    
@@ -51,6 +51,7 @@ export default {
     props: {
         slides: [Array, Boolean],
         id: Number,
+        title: String,
         quiz: Array
        
     },

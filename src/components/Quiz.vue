@@ -1,9 +1,9 @@
 <template>
-  <div class="quiz">
-      <h1>Willkommen zum Quiz! </h1>
-      <p>{{ quiz.length}} Fragen sind für dich bereit</p>
+  <div class="quiz quiz--viewport">
+      <h1 class="quiz quiz__heading">Quiz</h1>
+      <div class="quiz quiz__line"></div>
+      <h2 class="quiz quiz__title">{{ title }}</h2>
      
-
       <div class="quiz quiz__container">
     
     <!-- Frage -->
@@ -47,25 +47,53 @@
 <script>
 export default {
     props: {
+        title: String,
         quiz: Array
+    },
+    mounted(){
+        console.log(this.title)
     }
 }
 </script>
 
 <style lang="scss" scoped>
 
+
 .quiz {
+  
+    &--viewport {
+      width: 100%;
+      height: 100%;   
+    }  
+
+    &__heading {
+        margin-bottom: 10px;
+    }
+
+    &__line {
+      border-top: 3px solid #000000;
+      margin: 0 auto;
+      padding: 0;
+      width: 30px;
+      height: 39px; 
+    }
+
+    &__title {
+        font-family: Lato, sans-serif;
+        font-style: italic;
+        font-weight: bold;
+        margin: 5px 0 30px;
+    }
+
     &__container {
-        // display: flex;
-        // flex-direction: column;
         width: 500px;
-        // max-width: 90%;
+        max-width: 90%;
         height: 100%;
         background-color: rgba(196,196,196,.42);
         border-radius: 9px;
         padding: 20px;
         padding-top: 45px;
-        margin: 0 auto;
+        margin: 0 auto 30px;
     }
 
     &__question {
@@ -74,7 +102,7 @@ export default {
         border-radius: 9px; 
 
 
-        &-request{
+        &-request {
             font-family: Lato, sans-serif;
             font-style: italic;
             font-weight: bold;
@@ -118,6 +146,7 @@ export default {
                 font-weight: bold;
                 border: 2px solid transparent;
                 cursor: pointer;
+                transition: .3s ease-out;
             
                 &:hover, &:focus, &:active {
                     background-color: white;
@@ -140,6 +169,7 @@ export default {
         padding: 8px 23px 6px;
         margin-top: 25px;
         cursor: pointer;
+        transition: background-color .2s ease-out;
 
         &:hover, &:focus, &:active {
             background-color: white;
@@ -150,6 +180,59 @@ export default {
 
     }
 }
+
+@media screen and (max-width: 500px) {
+    .quiz {
+        &__heading {
+            font-size: 23px;
+        }
+        &__line {
+            height: 15px;
+        }
+
+        &__title {
+            font-size: 18px;
+            margin: 0 0 30px;
+        }
+        &__container {
+            padding-top: 25px;
+        }
+        &__question {
+            &-request {
+                margin-top: 25px;
+                margin-bottom: 17px;
+                font-size: 13px;
+            }
+
+            p {
+                font-size: 14px;
+                line-height: 22px;
+                padding: 5px;
+            }
+
+            &--background {
+                padding: 10px;
+            }   
+        }
+
+        &__answers {
+            &-list {
+                .answer {
+                    width: 90%;
+                    padding: 1em 0.3em 0.9em;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        &__button {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    }
+}
+
+
 
 </style>
 

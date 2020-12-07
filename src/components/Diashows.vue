@@ -7,21 +7,21 @@
           <div class="diashows diashows--grid" v-for="(diashow, innerIndex) in groupedDiashows(klassenstufe)" :key="innerIndex">
             <Diashow class="diashows diashows__diashow"
               :id="diashow.ID"
-              :title="diashow.post_name"
+              :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
               :quiz="diashow.acf.quiz">
             </Diashow>
             <Diashow class="diashows diashows__diashow"
               :id="diashow.ID"
-              :title="diashow.post_name"
+              :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
               :quiz="diashow.acf.quiz">
             </Diashow>
             <Diashow class="diashows diashows__diashow"
               :id="diashow.ID"
-              :title="diashow.post_name"
+              :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
               :quiz="diashow.acf.quiz">
