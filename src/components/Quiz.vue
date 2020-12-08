@@ -4,39 +4,45 @@
       <div class="quiz quiz__line"></div>
       <h2 class="quiz quiz__title">{{ title }}</h2>
      
-      <div class="quiz quiz__container">
+      <div v-if="!this.quizFinished" class="quiz quiz__container">
     
     <!-- Frage -->
         <div class="quiz quiz__question">
             <div class="quiz quiz__question--background">
-                <p>Die Arbeitsbedingungen auf den Tabakfeldern sind gesundheitsgefährdend, da Nikotin über die grünen Tabakblätter in die Haut gelangt. Wie hoch ist der Nikotingehalt, den die Pflücker*innen innerhalb einer Woche aufnehmen?</p>
+                <p v-html="currentQuestion"></p> 
             </div>
         </div>
 
     <!-- Task for question -->   
-    <p class="quiz quiz__question-request">Wähle die richtige Antwort aus!</p>
+    <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
+    <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText"></p> <!--TODO: Positive/negative Anwort-->
 
-       
-       <!-- ANSWERS -->
-        <div class="quiz quiz__answers">
+
+    <!-- ANSWERS -->
+
+       <!-- MULTIPLE CHOICE -->
+        <div v-if="quizType === 'multiple_choice'" class="quiz quiz__answers quiz__multiple-choice">
             <ul class="quiz quiz__answers-list">
-                <li>
-                    <button v-on:click="toggleAnswer(a)" class="answer" :class="{selected:answerSelected === a}">Nikotingehalt von 50 Zigaretten</button>
-                </li>
-                <li>
-                    <button v-on:click="toggleAnswer(a)" class="answer" :class="{selected:answerSelected === a}">Nikotingehalt von 50 Zigaretten</button>
-                </li>
-                <li>
-                    <button v-on:click="toggleAnswer(a)" class="answer" :class="{selected:answerSelected === a}">Nikotingehalt von 50 Zigaretten</button>
-                </li>
-                <li>
-                    <button v-on:click="toggleAnswer(a)" class="answer" :class="{selected:answerSelected === a}">Nikotingehalt von 50 Zigaretten</button>
+                <li v-for="answer in currentAnswers" :key="answer.id">
+                    <!-- Antworten aus Text bestehend -->
+                    <button v-if="answer.multiple_answer" v-on:click="toggleAnswer(answer)" :disabled="isValidated" class="answer" 
+                            :class="{'answer--correct': isValidated && isCorrect(answer), 'answer--false': answerSelected === answer && isValidated && !isCorrect(answer), 'answer--is-validated': isValidated}">
+                        {{ answer.multiple_answer }}
+                    </button>
+                    <!-- TODO Antworten aus Bildern bestehend -->
+                     <button v-if="answer.multiple_bild" v-on:click="toggleAnswer(answer)"  :disabled="isValidated" class="multiple-bild" >
+                         <img :src="answer.multiple_bild.sizes.woocommerce_thumbnail" class="answer-image" :class="{'selected': answerSelected === answer && !isValidated, 'answer--correct': isValidated && isCorrect(answer), 'answer--false': answerSelected === answer && isValidated && !isCorrect(answer), 'answer--image-is-validated': isValidated}">
+                     </button>
+
                 </li>
             </ul>
         </div>
 
-        <!-- FOOTER -->
-             <button v-on:click="toggleAnswer(a)" class="quiz quiz__button" :class="{selected:answerSelected === a}">Weiter</button>
+    <!-- FOOTER -->
+        <p v-if="!this.answerSelected && !this.isValidated" class="quiz quiz__question-count">Frage {{ currentQuestionIndex + 1 }} von {{ questionCount }}</p>
+        <button v-if="this.answerSelected && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
+        <button v-if="this.isValidated && !this.quizFinished" v-on:click="getNextQuestion()" class="quiz quiz__button">Weiter</button>
+
 
 
       </div>    
@@ -50,13 +56,152 @@ export default {
         title: String,
         quiz: Array
     },
-    mounted(){
-        console.log(this.title)
+
+    data () {
+        return {
+            questionCount: null,
+            correctAnswersCount: 0,
+            quizFinished: false,
+            currentQuestionIndex: 0,
+            answerSelected: null,
+            isValidated: false,
+
+        }
+    },
+    created() {
+        this.questionCount = this.quiz.length
+    },
+
+    methods: {
+        toggleAnswer(answer) {
+            console.log(answer)
+            if (this.answerSelected === answer) {
+                this.answerSelected = null;
+            } else {
+                this.answerSelected = answer;
+            }
+        },
+        validateAnswers() {
+            this.isValidated = true;
+
+            switch (this.quizType) {
+                case "multiple_choice": 
+                    if (this.isCorrect(this.answerSelected)) this.correctAnswersCount += 1;
+                    // this.answerSelected = null;
+                    break;
+                // case "lueckentext":
+                //     return this.quiz[this.currentQuestionIndex].quiz_frage
+                // case "free_answer":
+                //     return this.quiz[this.currentQuestionIndex].free_question
+                // case "connection_quiz":
+                //     return this.quiz[this.currentQuestionIndex].connection_question
+                // default:
+                //    return ""  
+            }
+
+            console.log(this.correctAnswersCount)
+        },
+        isCorrect(answer) {
+             switch (this.quizType) {
+                case "multiple_choice": 
+                    return answer.multiple_truth ||  answer.multiple_truth_image
+                   
+                // case "lueckentext":
+                //     return this.quiz[this.currentQuestionIndex].quiz_frage
+                // case "free_answer":
+                //     return this.quiz[this.currentQuestionIndex].free_question
+                // case "connection_quiz":
+                //     return this.quiz[this.currentQuestionIndex].connection_question
+                default:
+                   return false  
+            }
+        },
+
+        getNextQuestion() {
+            this.currentQuestionIndex += 1;
+            this.isValidated = false;
+
+            this.answerSelected = null;
+            if (this.currentQuestionIndex === this.questionCount) {
+                this.quizFinished = true;
+                // calculating number of not correctly answered questions, used for displaying flowers correctly in evaluation
+            }
+      }
+
+        
+
+    },
+    
+    computed: {
+        quizType() {
+            return this.quiz[this.currentQuestionIndex].acf_fc_layout
+        },
+        currentQuestion() {
+            switch (this.quizType) {
+                case "multiple_choice": 
+                    return this.quiz[this.currentQuestionIndex].multiple_question
+                case "lueckentext":
+                    return this.quiz[this.currentQuestionIndex].quiz_frage
+                case "free_answer":
+                    return this.quiz[this.currentQuestionIndex].free_question
+                case "connection_quiz":
+                    return this.quiz[this.currentQuestionIndex].connection_question
+                default:
+                   return ""  
+            }
+        },
+        currentAnswers() {
+            switch (this.quizType) {
+                 case "multiple_choice": 
+                    return this.quiz[this.currentQuestionIndex].multiple_answers_text || this.quiz[this.currentQuestionIndex].multiple_answers_images
+                case "lueckentext":
+                    return this.quiz[this.currentQuestionIndex].lueckentext_text
+                case "free_answer":
+                    return this.quiz[this.currentQuestionIndex].free_aufloesung
+                case "connection_quiz":
+                    return this.quiz[this.currentQuestionIndex].connection_pair
+                default:
+                   return []  
+            }
+        },
+        currentTask() {
+            switch (this.quizType) {
+                 case "multiple_choice": 
+                    return "Wähle eine oder mehrere richtige Antworten aus!"
+                case "lueckentext":
+                    return "Wähle die passenden Begriffe aus!"
+                case "free_answer":
+                     return "Schreib hier deine Anwort!"
+                case "connection_quiz":
+                     return "Ordne die passenden Beschreibungen zu!"
+                default:
+                   return ""  
+            }
+        },
+
+        solutionText() {
+             switch (this.quizType) {
+                 case "multiple_choice": 
+                    return this.quiz[this.currentQuestionIndex].multiple_aufloesung
+                case "lueckentext":
+                    return this.quiz[this.currentQuestionIndex].lueckentext_aufloesung
+                case "free_answer":
+                    return this.quiz[this.currentQuestionIndex].free_aufloesung
+                case "connection_quiz":
+                    return this.quiz[this.currentQuestionIndex].connection_aufloesung
+                default:
+                   return ""  
+            }
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+
+* {
+ font-family: Lato, sans-serif;
+}
 
 
 .quiz {
@@ -79,7 +224,7 @@ export default {
     }
 
     &__title {
-        font-family: Lato, sans-serif;
+       
         font-style: italic;
         font-weight: bold;
         margin: 5px 0 30px;
@@ -102,8 +247,7 @@ export default {
         border-radius: 9px; 
 
 
-        &-request {
-            font-family: Lato, sans-serif;
+        &-explanation {
             font-style: italic;
             font-weight: bold;
             margin-top: 60px;
@@ -115,7 +259,6 @@ export default {
         p {
             color: white;
             text-align: left;
-            font-family: Lato, sans-serif;
             font-style: normal;
             font-weight: bold;
             line-height: 25px;
@@ -142,7 +285,6 @@ export default {
                 background-color: rgb(143, 44,27);
                 border-style: none;
                 border-radius: 11px;
-                font-family: Lato, sans-serif;
                 font-weight: bold;
                 border: 2px solid transparent;
                 cursor: pointer;
@@ -155,12 +297,77 @@ export default {
                     transition: background-color .3s ease-out;
                     outline: none;
                 }
+  
+
+                &--is-validated {
+                    cursor: initial;
+                     &:hover, &:focus, &:active {
+                        background-color: rgb(143, 44,27);
+                        color: white;
+                        border: 2px solid transparent;
+                        transition: 0;
+                        outline: none;
+                    }
+                }
+                &--correct {
+                    background-color: white !important;
+                    border: 2px solid rgb(81, 214,35) !important;
+                    color:  rgb(81, 214,35) !important;
+                }
+
+                 &--false {
+                    background-color: white !important;
+                    border: 2px solid rgb(214, 35,35) !important;
+                    color:  rgb(214, 35,35) !important;
+                }
+
+                
+            }
+
+            .multiple-bild {
+                height: 200px;
+                padding: 0;
+                margin: 4% auto 0;
+                border-style: none;
+                background-color: none;
+                outline: none;
+                border-radius: 5px;
+            }
+
+            .selected {
+                border: 2px solid rgb(143, 44,27) !important;
+             }
+
+            .answer-image {
+                height: 100%;
+                border-radius: 5px;
+                cursor: pointer;
+                &:hover, &:focus, &:active {
+                    color: rgb(143, 44,27);
+                    border: 2px solid rgb(143, 44,27);
+                    outline: none;
+                } 
+            }
+                
+            .answer--image-is-validated {
+                cursor: initial;
+                    
+                &:hover, &:focus, &:active {
+                    color:  white !important;
+                    border: inherit;
+                    outline: none;
+                }
             }
         }
+
+    }
+
+    &__question-count {
+        margin-top: 55px;
+        margin-bottom: 4px;
     }
 
     &__button {
-        font-family: Lato, sans-serif;
         font-size: 16px;
         font-weight: bold;
         color: rgb(143, 44,27);
@@ -198,7 +405,7 @@ export default {
             padding-top: 25px;
         }
         &__question {
-            &-request {
+            &-explanation {
                 margin-top: 25px;
                 margin-bottom: 17px;
                 font-size: 13px;
@@ -229,6 +436,11 @@ export default {
             font-size: 14px;
             margin-top: 10px;
         }
+
+         &__question-count {
+             font-size: 14px;
+            margin-top: 40px;
+         }
     }
 }
 
