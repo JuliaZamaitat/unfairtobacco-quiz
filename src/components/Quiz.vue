@@ -15,14 +15,16 @@
 
     <!-- Task for question -->   
     <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
-    <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText"></p> <!--TODO: Positive/negative Anwort-->
+    <p v-if="this.isValidated && !this.quizType === 'free_answer'" class="quiz quiz__question-explanation" v-html="solutionText"></p> <!--TODO: Positive/negative Anwort-->
+    <p v-if="this.isValidated && this.quizType === 'free_answer'" class="quiz quiz__question-explanation">Deine Antwort</p>
 
+    
 
     <!-- ANSWERS -->
 
        <!-- MULTIPLE CHOICE -->
         <div v-if="quizType === 'multiple_choice'" class="quiz quiz__answers quiz__multiple-choice">
-            <ul class="quiz quiz__answers-list">
+            <ul class="quiz quiz__answers-multiple-list">
                 <li v-for="answer in currentAnswers" :key="answer.id">
                     <!-- Antworten aus Text bestehend -->
                     <button v-if="answer.multiple_answer" v-on:click="toggleAnswer(answer)" :disabled="isValidated" class="answer" 
@@ -37,6 +39,20 @@
                 </li>
             </ul>
         </div>
+
+
+        <!-- FREE TEXT -->
+        <div v-if="quizType === 'free_answer'" class="quiz quiz__answers quiz__free-answer">
+            <textarea v-model="freeAnswer" class="quiz quiz__answers-free-answer-input" 
+                    :class="{'quiz__answers-free-answer-input--correct': isValidated }" 
+                    :keyup="toggleAnswer(undefined)"
+                    :disabled="isValidated">
+            </textarea>
+            <p v-if="this.isValidated" class="quiz quiz__answers-free-answer-solution-heading">Eine mögliche Antwort von uns</p>
+            <p v-if="this.isValidated" v-html="solutionText" class="quiz quiz__answers-free-answer-solution"></p>
+        </div>
+
+
 
     <!-- FOOTER -->
         <p v-if="!this.answerSelected && !this.isValidated" class="quiz quiz__question-count">Frage {{ currentQuestionIndex + 1 }} von {{ questionCount }}</p>
@@ -62,10 +78,10 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 0,
+            currentQuestionIndex: 3,
             answerSelected: null,
             isValidated: false,
-
+            freeAnswer: null
         }
     },
     created() {
@@ -74,11 +90,14 @@ export default {
 
     methods: {
         toggleAnswer(answer) {
-            console.log(answer)
+            if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
+                this.answerSelected = true
+                return
+            }
             if (this.answerSelected === answer) {
-                this.answerSelected = null;
+                this.answerSelected = null
             } else {
-                this.answerSelected = answer;
+                this.answerSelected = answer
             }
         },
         validateAnswers() {
@@ -86,13 +105,13 @@ export default {
 
             switch (this.quizType) {
                 case "multiple_choice": 
-                    if (this.isCorrect(this.answerSelected)) this.correctAnswersCount += 1;
-                    // this.answerSelected = null;
-                    break;
+                    if (this.isCorrect(this.answerSelected)) this.correctAnswersCount += 1
+                    break
                 // case "lueckentext":
                 //     return this.quiz[this.currentQuestionIndex].quiz_frage
-                // case "free_answer":
-                //     return this.quiz[this.currentQuestionIndex].free_question
+                case "free_answer":
+                   this.correctAnswersCount += 1
+                   break
                 // case "connection_quiz":
                 //     return this.quiz[this.currentQuestionIndex].connection_question
                 // default:
@@ -118,18 +137,18 @@ export default {
         },
 
         getNextQuestion() {
-            this.currentQuestionIndex += 1;
-            this.isValidated = false;
+            this.currentQuestionIndex += 1
+            this.isValidated = false
+            this.freeAnswer = null
 
-            this.answerSelected = null;
+            this.answerSelected = null
             if (this.currentQuestionIndex === this.questionCount) {
-                this.quizFinished = true;
+                this.quizFinished = true
                 // calculating number of not correctly answered questions, used for displaying flowers correctly in evaluation
             }
-      }
-
-        
-
+      },
+    
+    
     },
     
     computed: {
@@ -167,7 +186,7 @@ export default {
         currentTask() {
             switch (this.quizType) {
                  case "multiple_choice": 
-                    return "Wähle eine oder mehrere richtige Antworten aus!"
+                    return "Wähle eine richtige Antwort aus!"
                 case "lueckentext":
                     return "Wähle die passenden Begriffe aus!"
                 case "free_answer":
@@ -238,14 +257,13 @@ export default {
         border-radius: 9px;
         padding: 20px;
         padding-top: 45px;
-        margin: 0 auto 30px;
+        margin: 0 auto;
     }
 
     &__question {
         background-color: rgb(143, 44,27);
         padding: 15px;
         border-radius: 9px; 
-
 
         &-explanation {
             font-style: italic;
@@ -273,7 +291,7 @@ export default {
     }
 
     &__answers {
-        &-list {
+        &-multiple-list {
             list-style: none;
             padding: 0;
 
@@ -298,7 +316,6 @@ export default {
                     outline: none;
                 }
   
-
                 &--is-validated {
                     cursor: initial;
                      &:hover, &:focus, &:active {
@@ -309,6 +326,7 @@ export default {
                         outline: none;
                     }
                 }
+
                 &--correct {
                     background-color: white !important;
                     border: 2px solid rgb(81, 214,35) !important;
@@ -320,8 +338,6 @@ export default {
                     border: 2px solid rgb(214, 35,35) !important;
                     color:  rgb(214, 35,35) !important;
                 }
-
-                
             }
 
             .multiple-bild {
@@ -360,6 +376,42 @@ export default {
             }
         }
 
+        &-free-answer-input {
+            width: 90%;
+            min-height: 170px;
+            border-radius: 10px;
+            border: 3px solid rgba(128,127,127,1);
+            resize: none;
+            overflow: auto;
+            outline: none;
+            padding: 10px;
+
+
+            &:hover, &:focus, &:active {
+                border: 2px solid rgb(143, 44,27); 
+            }
+
+            &--correct {
+                border: 3px solid rgb(81, 214,35) !important;
+                background-color: white;
+            }
+        }
+
+        &-free-answer-solution {
+            text-align: left;
+            font-style: italic;
+            font-weight: bold;
+            font-size: 14px;
+            width: 90%;
+            margin: 30px auto;
+            line-height: 148%;
+            
+            &-heading {
+                margin-top: 50px;
+                font-style: italic;
+                font-weight: bold;
+            }
+        }
     }
 
     &__question-count {
@@ -384,7 +436,6 @@ export default {
             transition: background-color .2s ease-out;
             outline: none;
         }
-
     }
 }
 
@@ -393,6 +444,7 @@ export default {
         &__heading {
             font-size: 23px;
         }
+
         &__line {
             height: 15px;
         }
@@ -401,10 +453,13 @@ export default {
             font-size: 18px;
             margin: 0 0 30px;
         }
+
         &__container {
             padding-top: 25px;
         }
+
         &__question {
+
             &-explanation {
                 margin-top: 25px;
                 margin-bottom: 17px;
@@ -423,11 +478,24 @@ export default {
         }
 
         &__answers {
-            &-list {
+
+            &-multiple-list {
+
                 .answer {
                     width: 90%;
                     padding: 1em 0.3em 0.9em;
                     font-size: 12px;
+                }
+            }
+
+            &-free-answer-solution {
+                font-size: 12px;
+
+                &-heading {
+                    margin-top: 30px;
+                    font-style: italic;
+                    font-weight: bold;
+                    font-size: 13px;
                 }
             }
         }
@@ -441,7 +509,7 @@ export default {
              font-size: 14px;
             margin-top: 40px;
          }
-    }
+    } 
 }
 
 
