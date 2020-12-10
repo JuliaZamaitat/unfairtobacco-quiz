@@ -53,6 +53,16 @@
         </div>
 
 
+        <!-- LUECKENTEXT -->
+        <div v-if="quizType === 'lueckentext'" class="quiz quiz__answers-lueckentext">
+            <p v-for="(textUndLuecke, index) in currentAnswers" class="quiz quiz__answers-lueckentext-text-luecke" :key="index">
+            {{ textUndLuecke.luecke_text }} <v-select :options="options"></v-select>
+
+            </p>
+        </div>
+
+
+
 
     <!-- FOOTER -->
         <p v-if="!this.answerSelected && !this.isValidated" class="quiz quiz__question-count">Frage {{ currentQuestionIndex + 1 }} von {{ questionCount }}</p>
@@ -67,7 +77,10 @@
 </template>
 
 <script>
+import "vue-select/src/scss/vue-select.scss";
+
 export default {
+
     props: {
         title: String,
         quiz: Array
@@ -78,17 +91,22 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 3,
+            currentQuestionIndex: 2,
             answerSelected: null,
             isValidated: false,
-            freeAnswer: null
+            freeAnswer: null,
+            options: null,
+                
+            
         }
     },
     created() {
         this.questionCount = this.quiz.length
+        this.options = this.quiz[this.currentQuestionIndex].acf_fc_layout === "lueckentext" ? [this.quiz[this.currentQuestionIndex].lueckentext_text[0].luecke_luecke] : ["null"]   //TODO
     },
 
     methods: {
+        
         toggleAnswer(answer) {
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
                 this.answerSelected = true
@@ -217,6 +235,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+
 
 * {
  font-family: Lato, sans-serif;
@@ -412,6 +432,29 @@ export default {
                 font-weight: bold;
             }
         }
+
+
+        &-lueckentext{
+            width: 90%;
+            margin: 0 auto;
+            text-align: justify;
+            font-size: 17px;
+            line-height: 170%;
+            font-weight: bold;
+            
+            &-text-luecke {
+                display: inline;
+               
+                .dropdown {
+                    width: 200px !important;
+                    display: inline-block !important;
+                    height: 100% !important;
+
+                } 
+                   
+            }
+        }
+       
     }
 
     &__question-count {
