@@ -56,8 +56,19 @@
         <!-- LUECKENTEXT -->
         <div v-if="quizType === 'lueckentext'" class="quiz quiz__answers-lueckentext">
             <p v-for="(textUndLuecke, index) in currentAnswers" class="quiz quiz__answers-lueckentext-text-luecke" :key="index">
-            {{ textUndLuecke.luecke_text }} <v-select :options="options"></v-select>
+            {{ textUndLuecke.luecke_text }} 
+            <!-- NOT YET VALIDATED -->
+            <select v-if="!isValidated" @change="setSelected($event.target.value)" class="quiz quiz__answers-lueckentext-select">
+                <option hidden disabled selected value></option>
+                 <option v-for="(tL, i) in currentAnswers" v-bind:value="[tL.luecke_luecke, textUndLuecke.luecke_luecke, index]" :key="i" >
+                    {{ tL.luecke_luecke }}
+                </option>
+            </select>
 
+            <!-- VALIDATED -->
+            <select v-if="isValidated" disabled=true class="quiz quiz__answers-lueckentext-select" :class="{'answer--correct': isValidated && isCorrect(index), 'answer--false': isValidated && !isCorrect(index)}">
+                 <option>{{ textUndLuecke.luecke_luecke }}</option>
+            </select>
             </p>
         </div>
 
@@ -77,7 +88,6 @@
 </template>
 
 <script>
-import "vue-select/src/scss/vue-select.scss";
 
 export default {
 
@@ -91,22 +101,31 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 2,
+            currentQuestionIndex: 0,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
-            options: null,
-                
-            
+            dropdownOptions: [],
+            correctLuecke: []
+        }
+    },
+    watch: {
+        currentQuestionIndex: function () {
+            if (this.quizType === "lueckentext") {
+                const luecken = []
+                const lueckentext = this.quiz[this.currentQuestionIndex].lueckentext_text;
+                for(var luecke in lueckentext){
+                    luecken.push(lueckentext[luecke].luecke_luecke)
+                }
+             this.dropdownOptions = luecken
+            }
         }
     },
     created() {
         this.questionCount = this.quiz.length
-        this.options = this.quiz[this.currentQuestionIndex].acf_fc_layout === "lueckentext" ? [this.quiz[this.currentQuestionIndex].lueckentext_text[0].luecke_luecke] : ["null"]   //TODO
     },
 
     methods: {
-        
         toggleAnswer(answer) {
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
                 this.answerSelected = true
@@ -125,8 +144,14 @@ export default {
                 case "multiple_choice": 
                     if (this.isCorrect(this.answerSelected)) this.correctAnswersCount += 1
                     break
-                // case "lueckentext":
-                //     return this.quiz[this.currentQuestionIndex].quiz_frage
+                case "lueckentext": {
+                    let errorCount = 0
+                    for(var element in this.correctLuecke){
+                        if (this.correctLuecke[element]?.correct === false) errorCount += 1
+                    }
+                    if (errorCount === 0) this.correctAnswersCount +=1
+                    break
+                }
                 case "free_answer":
                    this.correctAnswersCount += 1
                    break
@@ -143,8 +168,14 @@ export default {
                 case "multiple_choice": 
                     return answer.multiple_truth ||  answer.multiple_truth_image
                    
-                // case "lueckentext":
-                //     return this.quiz[this.currentQuestionIndex].quiz_frage
+                case "lueckentext":
+                   for(var element in this.correctLuecke){
+                        if (this.correctLuecke[element]?.id === answer.toString()) {
+                            console.log(this.correctLuecke[element].correct, answer)
+                            return this.correctLuecke[element].correct
+                        }
+                    }
+                    break
                 // case "free_answer":
                 //     return this.quiz[this.currentQuestionIndex].free_question
                 // case "connection_quiz":
@@ -153,7 +184,6 @@ export default {
                    return false  
             }
         },
-
         getNextQuestion() {
             this.currentQuestionIndex += 1
             this.isValidated = false
@@ -164,11 +194,33 @@ export default {
                 this.quizFinished = true
                 // calculating number of not correctly answered questions, used for displaying flowers correctly in evaluation
             }
-      },
-    
-    
+        },
+        setSelected(value) {
+            
+            const values = value.split(",")
+            const selectedValue = values[0]
+            const actualValue = values[1]
+            const id = values[2] //The ids of the text paragraph
+            
+            //check if a value for a paragraph with that id was added before
+            for(var element in this.correctLuecke){
+                if (this.correctLuecke[element]?.id === id) {
+                    this.correctLuecke[element] = null;
+                    //   console.log(`Item with id ${id} removed from array`, this.correctLuecke)
+                }
+            }
+
+            if (selectedValue === actualValue) {
+                // console.log("true", id)
+                this.correctLuecke.push({id: id, correct: true})
+            } else {
+                // console.log("false", id)
+                this.correctLuecke.push({id: id, correct: false})
+            }
+            
+            this.answerSelected = true
+        }
     },
-    
     computed: {
         quizType() {
             return this.quiz[this.currentQuestionIndex].acf_fc_layout
@@ -216,14 +268,14 @@ export default {
             }
         },
 
-        solutionText() {
+        solutionText() { //TODO Unterscheidung Positiv/Negativ
              switch (this.quizType) {
                  case "multiple_choice": 
                     return this.quiz[this.currentQuestionIndex].multiple_aufloesung
                 case "lueckentext":
                     return this.quiz[this.currentQuestionIndex].lueckentext_aufloesung
                 case "free_answer":
-                    return this.quiz[this.currentQuestionIndex].free_aufloesung
+                    return this.quiz[this.currentQuestionIndex].free_aufloesung 
                 case "connection_quiz":
                     return this.quiz[this.currentQuestionIndex].connection_aufloesung
                 default:
@@ -442,6 +494,12 @@ export default {
             line-height: 170%;
             font-weight: bold;
             
+            &-select{
+                height: 30px;
+                margin: 5px 0;
+                border: 1px solid rgb(143, 44,27);
+                border-radius: 6px;
+            }
             &-text-luecke {
                 display: inline;
                
@@ -451,7 +509,16 @@ export default {
                     height: 100% !important;
 
                 } 
-                   
+                .answer--correct {
+                     border: 2px solid rgb(81, 214,35);
+                     color: rgb(81, 214,35);
+                }
+                 .answer--false {
+                     border:  2px solid rgb(214, 35,35);
+                     opacity: 1;
+                    color: rgb(214, 35,35) !important;
+                }
+                    
             }
         }
        
