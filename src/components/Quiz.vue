@@ -15,8 +15,7 @@
 
     <!-- Task for question -->   
     <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
-    <p v-if="this.isValidated && !this.quizType === 'free_answer'" class="quiz quiz__question-explanation" v-html="solutionText"></p> <!--TODO: Positive/negative Anwort-->
-    <p v-if="this.isValidated && this.quizType === 'free_answer'" class="quiz quiz__question-explanation">Deine Antwort</p>
+    <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText()"></p> 
 
     
 
@@ -31,7 +30,7 @@
                             :class="{'answer--correct': isValidated && isCorrect(answer), 'answer--false': answerSelected === answer && isValidated && !isCorrect(answer), 'answer--is-validated': isValidated}">
                         {{ answer.multiple_answer }}
                     </button>
-                    <!-- TODO Antworten aus Bildern bestehend -->
+                    <!-- Antworten aus Bildern bestehend -->
                      <button v-if="answer.multiple_bild" v-on:click="toggleAnswer(answer)"  :disabled="isValidated" class="multiple-bild" >
                          <img :src="answer.multiple_bild.sizes.woocommerce_thumbnail" class="answer-image" :class="{'selected': answerSelected === answer && !isValidated, 'answer--correct': isValidated && isCorrect(answer), 'answer--false': answerSelected === answer && isValidated && !isCorrect(answer), 'answer--image-is-validated': isValidated}">
                      </button>
@@ -106,7 +105,8 @@ export default {
             isValidated: false,
             freeAnswer: null,
             dropdownOptions: [],
-            correctLuecke: []
+            correctLuecke: [],
+            correct: false
         }
     },
     watch: {
@@ -119,7 +119,7 @@ export default {
                 }
              this.dropdownOptions = luecken
             }
-        }
+        },
     },
     created() {
         this.questionCount = this.quiz.length
@@ -142,18 +142,25 @@ export default {
 
             switch (this.quizType) {
                 case "multiple_choice": 
-                    if (this.isCorrect(this.answerSelected)) this.correctAnswersCount += 1
+                    if (this.isCorrect(this.answerSelected)) {
+                        this.correctAnswersCount += 1
+                        this.correct = true
+                    }
                     break
                 case "lueckentext": {
                     let errorCount = 0
                     for(var element in this.correctLuecke){
                         if (this.correctLuecke[element]?.correct === false) errorCount += 1
                     }
-                    if (errorCount === 0) this.correctAnswersCount +=1
+                    if (errorCount === 0) {
+                        this.correctAnswersCount +=1
+                         this.correct = true
+                    }
                     break
                 }
                 case "free_answer":
                    this.correctAnswersCount += 1
+                    this.correct = true
                    break
                 // case "connection_quiz":
                 //     return this.quiz[this.currentQuestionIndex].connection_question
@@ -171,7 +178,6 @@ export default {
                 case "lueckentext":
                    for(var element in this.correctLuecke){
                         if (this.correctLuecke[element]?.id === answer.toString()) {
-                            console.log(this.correctLuecke[element].correct, answer)
                             return this.correctLuecke[element].correct
                         }
                     }
@@ -188,6 +194,9 @@ export default {
             this.currentQuestionIndex += 1
             this.isValidated = false
             this.freeAnswer = null
+            this.correct = false
+            this.correctLuecke = []
+            this.dropdownOptions = []
 
             this.answerSelected = null
             if (this.currentQuestionIndex === this.questionCount) {
@@ -196,29 +205,35 @@ export default {
             }
         },
         setSelected(value) {
-            
             const values = value.split(",")
             const selectedValue = values[0]
             const actualValue = values[1]
-            const id = values[2] //The ids of the text paragraph
+            const index = values[2] //The index of the text paragraph
             
             //check if a value for a paragraph with that id was added before
             for(var element in this.correctLuecke){
-                if (this.correctLuecke[element]?.id === id) {
-                    this.correctLuecke[element] = null;
-                    //   console.log(`Item with id ${id} removed from array`, this.correctLuecke)
-                }
+                if (this.correctLuecke[element]?.id === index) this.correctLuecke[element] = null;       
             }
 
-            if (selectedValue === actualValue) {
-                // console.log("true", id)
-                this.correctLuecke.push({id: id, correct: true})
-            } else {
-                // console.log("false", id)
-                this.correctLuecke.push({id: id, correct: false})
-            }
-            
+            if (selectedValue === actualValue) this.correctLuecke.push({id: index, correct: true})
+            else this.correctLuecke.push({id: index, correct: false})
+               
             this.answerSelected = true
+        },
+        solutionText() { 
+            const question = this.quiz[this.currentQuestionIndex]
+             switch (this.quizType) {
+                 case "multiple_choice":
+                   return this.correct ? question.multiple_aufloesung[0].positive_answer : question.multiple_aufloesung[0].negative_answer
+                case "lueckentext":
+                    return this.correct ? question.lueckentext_aufloesung[0].positive_answer : question.lueckentext_aufloesung[0].negative_answer
+                case "free_answer":
+                    return question.free_aufloesung[0].positive_answer
+                case "connection_quiz":
+                    return this.correct ? question.connection_aufloesung[0].positive_answer : question.connection_aufloesung[0].negative_answer
+                default:
+                   return ""  
+            }
         }
     },
     computed: {
@@ -267,21 +282,6 @@ export default {
                    return ""  
             }
         },
-
-        solutionText() { //TODO Unterscheidung Positiv/Negativ
-             switch (this.quizType) {
-                 case "multiple_choice": 
-                    return this.quiz[this.currentQuestionIndex].multiple_aufloesung
-                case "lueckentext":
-                    return this.quiz[this.currentQuestionIndex].lueckentext_aufloesung
-                case "free_answer":
-                    return this.quiz[this.currentQuestionIndex].free_aufloesung 
-                case "connection_quiz":
-                    return this.quiz[this.currentQuestionIndex].connection_aufloesung
-                default:
-                   return ""  
-            }
-        }
     }
 }
 </script>

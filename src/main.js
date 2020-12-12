@@ -4,8 +4,6 @@ import router from './router'
 
 import VueSplide from '@splidejs/vue-splide'
 
-import vSelect from "vue-select";
-Vue.component("v-select", vSelect);
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
