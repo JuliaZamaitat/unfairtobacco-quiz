@@ -48,7 +48,7 @@
                     :disabled="isValidated">
             </textarea>
             <p v-if="this.isValidated" class="quiz quiz__answers-free-answer-solution-heading">Eine mögliche Antwort von uns</p>
-            <p v-if="this.isValidated" v-html="solutionText" class="quiz quiz__answers-free-answer-solution"></p>
+            <p v-if="this.isValidated" v-html="this.ourAnswer" class="quiz quiz__answers-free-answer-solution"></p>
         </div>
 
 
@@ -63,7 +63,6 @@
                     {{ tL.luecke_luecke }}
                 </option>
             </select>
-
             <!-- VALIDATED -->
             <select v-if="isValidated" disabled=true class="quiz quiz__answers-lueckentext-select" :class="{'answer--correct': isValidated && isCorrect(index), 'answer--false': isValidated && !isCorrect(index)}">
                  <option>{{ textUndLuecke.luecke_luecke }}</option>
@@ -72,6 +71,39 @@
         </div>
 
 
+        <!-- ZUORDNEN -->
+        <div v-if="quizType === 'connection_quiz'" class="quiz quiz__answers-connection-quiz">
+            <!-- DROP AREA -->
+            <div v-if="!isValidated">
+                <div v-for="(liste) in draggableLists" :key="liste.id">
+                    <div class="drop-area" :class="{'answer--correct': isValidated && isCorrect()}">
+                        <draggable group="drop-quiz" :list="liste" :disabled="disable(liste)">
+                            <div class="descriptions" v-for="item in liste" :key="item.id">
+                                {{ item ? item.connection_description : item }}
+                            </div>
+                        </draggable>
+                    </div>
+                </div>
+            <div class="quiz quiz__line quiz__line--red"></div>
+            <!-- SELECT ITEMS -->
+            <draggable group="drop-quiz" :list="currentAnswers">
+                <div class="descriptions" v-for="expressionPair in currentAnswers" :key="expressionPair.id">
+                    {{ expressionPair.connection_description }}
+                    </div> 
+            </draggable>
+            
+            <!-- Different conditions apply for this button -->
+            <button v-if="currentAnswers.length === 0 && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
+            </div>
+           
+            <div v-if="isValidated">
+                <div v-for="(answer,index) in storedAnswers" :key="answer.id">
+                    <div class="drop-area" :class="{'answer--correct': isValidated && isCorrect(index), 'answer--false': isValidated && !isCorrect(index)}">
+                           {{ answer.connection_description }}      
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
     <!-- FOOTER -->
@@ -79,17 +111,19 @@
         <button v-if="this.answerSelected && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
         <button v-if="this.isValidated && !this.quizFinished" v-on:click="getNextQuestion()" class="quiz quiz__button">Weiter</button>
 
-
-
       </div>    
 
   </div>
 </template>
 
 <script>
+  import draggable from 'vuedraggable'
+
 
 export default {
-
+    components: {
+            draggable,
+        },
     props: {
         title: String,
         quiz: Array
@@ -100,13 +134,16 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 0,
+            currentQuestionIndex: 3,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
             dropdownOptions: [],
             correctLuecke: [],
-            correct: false
+            correct: false,
+            ourAnswer: null,
+            draggableLists: [],
+            storedAnswers: []
         }
     },
     watch: {
@@ -119,6 +156,17 @@ export default {
                 }
              this.dropdownOptions = luecken
             }
+            console.log(this.quizType)
+
+            if(this.quizType ==="connection_quiz"){
+                 const connectionPairs = this.quiz[this.currentQuestionIndex].connection_pair;
+                 // eslint-disable-next-line no-unused-vars
+                 for(var pair in connectionPairs){
+                    const emptyArray = []
+                    this.storedAnswers.push(connectionPairs[pair])
+                    this.draggableLists.push(emptyArray)
+                 }
+            }
         },
     },
     created() {
@@ -126,6 +174,11 @@ export default {
     },
 
     methods: {
+        disable(value){
+            if (value.length === 1) {
+                return true
+            }
+        },
         toggleAnswer(answer) {
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
                 this.answerSelected = true
@@ -159,13 +212,20 @@ export default {
                     break
                 }
                 case "free_answer":
-                   this.correctAnswersCount += 1
+                    this.correctAnswersCount += 1
                     this.correct = true
                    break
-                // case "connection_quiz":
-                //     return this.quiz[this.currentQuestionIndex].connection_question
-                // default:
-                //    return ""  
+                case "connection_quiz":
+                    this.correct = true   
+                   for(var index in this.draggableLists) {
+                        if (this.draggableLists[index][0].connection_description !== this.storedAnswers[index].connection_description) {
+                            this.correct = false
+                        }
+                    } 
+                    if (this.correct) this.correctAnswersCount +=1
+                    break
+                default:
+                   return ""  
             }
 
             console.log(this.correctAnswersCount)
@@ -182,10 +242,8 @@ export default {
                         }
                     }
                     break
-                // case "free_answer":
-                //     return this.quiz[this.currentQuestionIndex].free_question
-                // case "connection_quiz":
-                //     return this.quiz[this.currentQuestionIndex].connection_question
+                case "connection_quiz":
+                    return this.draggableLists[answer][0].connection_description === this.storedAnswers[answer].connection_description
                 default:
                    return false  
             }
@@ -197,7 +255,9 @@ export default {
             this.correct = false
             this.correctLuecke = []
             this.dropdownOptions = []
-
+            this.ourAnswer = null
+            this.draggableLists = []
+            this.storedAnswers = []
             this.answerSelected = null
             if (this.currentQuestionIndex === this.questionCount) {
                 this.quizFinished = true
@@ -228,6 +288,7 @@ export default {
                 case "lueckentext":
                     return this.correct ? question.lueckentext_aufloesung[0].positive_answer : question.lueckentext_aufloesung[0].negative_answer
                 case "free_answer":
+                    this.ourAnswer = question.our_answer
                     return question.free_aufloesung[0].positive_answer
                 case "connection_quiz":
                     return this.correct ? question.connection_aufloesung[0].positive_answer : question.connection_aufloesung[0].negative_answer
@@ -312,6 +373,13 @@ export default {
       padding: 0;
       width: 30px;
       height: 39px; 
+
+      &--red {
+        border-top: 3px solid rgb(143, 44,27);
+        margin-top: 40px;
+        margin-bottom: 0;
+        height: 20px; 
+      }
     }
 
     &__title {
@@ -514,11 +582,55 @@ export default {
                      color: rgb(81, 214,35);
                 }
                  .answer--false {
-                     border:  2px solid rgb(214, 35,35);
-                     opacity: 1;
+                    border:  2px solid rgb(214, 35,35);
+                    opacity: 1;
                     color: rgb(214, 35,35) !important;
                 }
                     
+            }
+        }
+
+        &-connection-quiz {
+            width: 80%;
+            margin: 0 auto;
+
+            .expression {
+                font-weight: bold;
+                 margin-bottom: 0px;
+            }
+
+            .descriptions {
+                width: 90%;
+                margin: 0 auto;
+                background-color: rgb(143, 44,27);
+                color: white;
+                margin: 20px;
+                padding: 10px 15px;
+                font-weight: bold;
+                font-size: 12px;
+                border-radius: 6px;
+                min-height: 50px;
+            }
+
+            .drop-area {
+                width: 90%;
+                margin: 0 auto;
+                background-color: white;
+                border: 1px solid rgb(143, 44,27);
+                border-radius: 6px;
+                min-height: 40px;
+                margin-bottom: 20px;
+                margin-top: 10px;
+                padding: 10px 15px;
+            }
+            .answer--correct {
+                border: 2px solid rgb(81, 214,35);
+                color: rgb(81, 214,35);
+            }
+
+            .answer--false {
+                 border: 2px solid rgb(214, 35,35);
+                color: rgb(214, 35,35);
             }
         }
        
