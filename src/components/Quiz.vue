@@ -75,8 +75,9 @@
         <div v-if="quizType === 'connection_quiz'" class="quiz quiz__answers-connection-quiz">
             <!-- DROP AREA -->
             <div v-if="!isValidated">
-                <div v-for="(liste) in draggableLists" :key="liste.id">
-                    <div class="drop-area" :class="{'answer--correct': isValidated && isCorrect()}">
+                <div v-for="(liste, i) in draggableLists" :key="liste.id">
+                     <p class="expression">{{ storedAnswers[i].connection_expression }}</p>
+                    <div class="drop-area">
                         <draggable group="drop-quiz" :list="liste" :disabled="disable(liste)">
                             <div class="descriptions" v-for="item in liste" :key="item.id">
                                 {{ item ? item.connection_description : item }}
@@ -96,8 +97,10 @@
             <button v-if="currentAnswers.length === 0 && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
             </div>
            
+           <!-- After Validation -->
             <div v-if="isValidated">
                 <div v-for="(answer,index) in storedAnswers" :key="answer.id">
+                    <p class="expression">{{ answer.connection_expression }}</p>
                     <div class="drop-area" :class="{'answer--correct': isValidated && isCorrect(index), 'answer--false': isValidated && !isCorrect(index)}">
                            {{ answer.connection_description }}      
                     </div>
@@ -108,7 +111,7 @@
 
     <!-- FOOTER -->
         <p v-if="!this.answerSelected && !this.isValidated" class="quiz quiz__question-count">Frage {{ currentQuestionIndex + 1 }} von {{ questionCount }}</p>
-        <button v-if="this.answerSelected && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
+        <button v-if="this.answerSelected && !this.isValidated && this.quizType !=='connection_quiz'" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
         <button v-if="this.isValidated && !this.quizFinished" v-on:click="getNextQuestion()" class="quiz quiz__button">Weiter</button>
 
       </div>    
@@ -175,6 +178,7 @@ export default {
 
     methods: {
         disable(value){
+            this.answerSelected = true;
             if (value.length === 1) {
                 return true
             }
@@ -227,7 +231,6 @@ export default {
                 default:
                    return ""  
             }
-
             console.log(this.correctAnswersCount)
         },
         isCorrect(answer) {
@@ -600,11 +603,11 @@ export default {
             }
 
             .descriptions {
-                width: 90%;
+                width: 100%;
                 margin: 0 auto;
                 background-color: rgb(143, 44,27);
                 color: white;
-                margin: 20px;
+                margin-bottom: 20px;
                 padding: 10px 15px;
                 font-weight: bold;
                 font-size: 12px;
@@ -613,24 +616,26 @@ export default {
             }
 
             .drop-area {
-                width: 90%;
+                width: 100%;
                 margin: 0 auto;
                 background-color: white;
-                border: 1px solid rgb(143, 44,27);
+                // border: 1px solid rgb(143, 44,27);
                 border-radius: 6px;
                 min-height: 40px;
                 margin-bottom: 20px;
                 margin-top: 10px;
-                padding: 10px 15px;
+                // padding: 10px 15px;
             }
             .answer--correct {
                 border: 2px solid rgb(81, 214,35);
                 color: rgb(81, 214,35);
+                padding: 10px 15px;
             }
 
             .answer--false {
                  border: 2px solid rgb(214, 35,35);
                 color: rgb(214, 35,35);
+                padding: 10px 15px;
             }
         }
        
