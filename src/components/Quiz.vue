@@ -1,5 +1,5 @@
 <template>
-  <div class="quiz quiz--viewport">
+<div class="quiz quiz--viewport">
       <h1 class="quiz quiz__heading">Quiz</h1>
       <div class="quiz quiz__line"></div>
       <h2 class="quiz quiz__title">{{ title }}</h2>
@@ -14,8 +14,8 @@
         </div>
 
     <!-- Task for question -->   
-    <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
-    <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText()"></p> 
+        <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
+        <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText()"></p> 
 
     
 
@@ -116,6 +116,39 @@
 
       </div>    
 
+<!-- FINISHED -->
+    <div v-if="this.quizFinished" class="quiz quiz__container">
+        <!-- POSITIVE SCREEN -->
+        <div v-if="((correctAnswersCount * 100) / questionCount) > 70">
+            <div class="quiz quiz__question quiz__question--congrats">
+                <div class="quiz quiz__question--background quiz__question--background-congrats">
+                    <p>Herzlichen Glückwunsch! <br> Du hast {{ correctAnswersCount }} von {{ questionCount}} Fragen richtig beantwortet!</p>
+                </div>
+            </div> 
+            <p class="quiz quiz__finished-text">Du hast dein Wissen in diesem Quiz unter Beweis gestellt!</p>
+            <p class="quiz quiz__finished-text--share">Teile das mit deinen Freunden!</p>
+             <div class="quiz quiz__social-media-icons">
+                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'facebook-square']" />
+                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'instagram-square']" />
+                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'twitter-square']" />
+            </div>
+            <p class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+
+        </div>
+        <!-- NEGATIVE SCREEN -->
+        <div v-else>
+            <div class="quiz quiz__question quiz__question--no-congrats">
+                <div class="quiz quiz__question--background quiz__question--background-no-congrats">
+                    <p>Schade! <br> Leider waren nicht alle Antworten richtig!</p>
+                </div>
+            </div>
+            <p class="quiz quiz__finished-text">Möchtest du es nochmal probieren?</p>
+            <button class="quiz quiz__finished-try-again" @click="resetData()">Neuer Versuch</button>
+            <p class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+        </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -137,7 +170,7 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 3,
+            currentQuestionIndex: 0,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -159,11 +192,9 @@ export default {
                 }
              this.dropdownOptions = luecken
             }
-            console.log(this.quizType)
 
-            if(this.quizType ==="connection_quiz"){
+            if(this.quizType === "connection_quiz"){
                  const connectionPairs = this.quiz[this.currentQuestionIndex].connection_pair;
-                 // eslint-disable-next-line no-unused-vars
                  for(var pair in connectionPairs){
                     const emptyArray = []
                     this.storedAnswers.push(connectionPairs[pair])
@@ -177,6 +208,11 @@ export default {
     },
 
     methods: {
+        resetData() {
+            Object.assign(this.$data, this.$options.data.call(this));
+            this.questionCount = this.quiz.length
+
+        },
         disable(value){
             this.answerSelected = true;
             if (value.length === 1) {
@@ -231,7 +267,6 @@ export default {
                 default:
                    return ""  
             }
-            console.log(this.correctAnswersCount)
         },
         isCorrect(answer) {
              switch (this.quizType) {
@@ -264,7 +299,6 @@ export default {
             this.answerSelected = null
             if (this.currentQuestionIndex === this.questionCount) {
                 this.quizFinished = true
-                // calculating number of not correctly answered questions, used for displaying flowers correctly in evaluation
             }
         },
         setSelected(value) {
@@ -302,7 +336,7 @@ export default {
     },
     computed: {
         quizType() {
-            return this.quiz[this.currentQuestionIndex].acf_fc_layout
+            return this.quiz[this.currentQuestionIndex]?.acf_fc_layout
         },
         currentQuestion() {
             switch (this.quizType) {
@@ -326,8 +360,15 @@ export default {
                     return this.quiz[this.currentQuestionIndex].lueckentext_text
                 case "free_answer":
                     return this.quiz[this.currentQuestionIndex].free_aufloesung
-                case "connection_quiz":
-                    return this.quiz[this.currentQuestionIndex].connection_pair
+                case "connection_quiz": {
+                    const answers = []
+                    //needs not to be pointed to the object directly, because dragging would alter the object
+                    const connectionPairs = this.quiz[this.currentQuestionIndex].connection_pair; 
+                    for(var pair in connectionPairs){
+                        answers.push(connectionPairs[pair])
+                    }
+                    return answers
+                }
                 default:
                    return []  
             }
@@ -356,6 +397,7 @@ export default {
 
 * {
  font-family: Lato, sans-serif;
+ color: black;
 }
 
 
@@ -426,10 +468,28 @@ export default {
             padding: 10px;
         }
 
+        &--congrats {
+             background-color: rgb(81, 214,35);
+             
+        }
+
+        &--no-congrats {
+             background-color: rgb(214, 35,35);
+        }
+
         &--background {
             background-color: rgba(0, 0, 0, .34);
             border-radius: 9px;
             padding: 15px;
+
+            &-congrats {
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
+            &-no-congrats {
+                padding-top: 30px;
+                padding-bottom: 30px;
+            }
         }   
     }
 
@@ -664,6 +724,53 @@ export default {
             outline: none;
         }
     }
+
+    &__finished-text {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 0 auto;
+        margin-top: 50px;
+        width: 80%;
+        line-height: 160%;
+        
+        &--share {
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 60px;
+        }
+    }
+    &__icon {
+        color: black;
+        font-size: 3em;
+        margin: 30px 0.3em;
+    }
+
+    &__link-text {
+        margin-top: 40px;
+
+        &--try-again {
+            font-weight: bold;
+            margin-top: 50px;
+            margin-bottom: 70px;
+        }
+    }
+
+    .router-link-active{
+       color: black;
+        
+    }
+
+    &__finished-try-again {
+        border-style: none;
+        cursor: pointer;
+        text-decoration: underline;
+        background-color:rgba(196,196,196,0);
+        font-weight: bold;
+        margin-top: 50px;
+        margin-bottom: 40px;
+        font-size: 16px;
+
+    }
 }
 
 @media screen and (max-width: 500px) {
@@ -734,12 +841,9 @@ export default {
 
          &__question-count {
              font-size: 14px;
-            margin-top: 40px;
+             margin-top: 40px;
          }
     } 
 }
-
-
-
 </style>
 
