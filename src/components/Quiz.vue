@@ -128,9 +128,9 @@
             <p class="quiz quiz__finished-text">Du hast dein Wissen in diesem Quiz unter Beweis gestellt!</p>
             <p class="quiz quiz__finished-text--share">Teile das mit deinen Freunden!</p>
              <div class="quiz quiz__social-media-icons">
-                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'facebook-square']" />
-                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'instagram-square']" />
-                <font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'twitter-square']" />
+                <a href="https://www.facebook.com/unfairtobacco"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'facebook-square']" /></a>
+                <a href="https://www.instagram.com/unfairtobacco/"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'instagram-square']" /></a>
+                <a href="https://twitter.com/unfairtobacco"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'twitter-square']" /></a>
             </div>
             <p class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
 

@@ -3,7 +3,7 @@
     <h1 class="diashows diashows__heading">Diashows & Quiz</h1>
       <div class="diashows diashows__line"></div>
         <div class="diashows diashows__klassenstufen" v-for="(klassenstufe, index) in klassenstufen" :key="index">
-          <h2 class="diashows diashows__title" v-html=klassenstufe> </h2>
+          <h2 class="diashows diashows__title" v-html=klassenstufe></h2>
           <div class="diashows diashows--grid" v-for="(diashow, innerIndex) in groupedDiashows(klassenstufe)" :key="innerIndex">
             <Diashow class="diashows diashows__diashow"
               :id="diashow.ID"

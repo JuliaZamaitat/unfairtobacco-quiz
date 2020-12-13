@@ -24,10 +24,10 @@
                     </div>    
                     <p class="slider slider__follow">Folge uns auf</p>
                     <div class="slider slider__social-media-icons">
-                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'facebook-square']" />
-                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'instagram-square']" />
-                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'twitter-square']" />
-                        <font-awesome-icon class="slider slider__icon" :icon="['fab', 'youtube-square']" />
+                        <a href="https://www.facebook.com/unfairtobacco"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'facebook-square']" /></a>
+                        <a href="https://www.instagram.com/unfairtobacco/"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'instagram-square']" /></a>
+                        <a href="https://twitter.com/unfairtobacco"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'twitter-square']" /></a>
+                        <a href="https://www.youtube.com/channel/UCD2EWWfHa4tgbcHhjlFmGxg"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'youtube-square']" /></a>
                     </div>
                 </div>
             </div>
