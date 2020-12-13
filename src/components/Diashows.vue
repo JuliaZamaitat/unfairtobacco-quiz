@@ -10,6 +10,8 @@
               :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
+              :thumbnail="diashow.acf.thumbnail"
+              :videoUrl="diashow.acf.videoLink"
               :quiz="diashow.acf.quiz">
             </Diashow>
             <Diashow class="diashows diashows__diashow"
@@ -17,6 +19,8 @@
               :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
+              :thumbnail="diashow.acf.thumbnail"
+              :videoUrl="diashow.acf.videoLink"
               :quiz="diashow.acf.quiz">
             </Diashow>
             <Diashow class="diashows diashows__diashow"
@@ -24,6 +28,8 @@
               :title="diashow.post_title"
               :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
               :slides="diashow.acf.diashow_slides"
+              :thumbnail="diashow.acf.thumbnail"
+              :videoUrl="diashow.acf.videoLink"
               :quiz="diashow.acf.quiz">
             </Diashow>
            

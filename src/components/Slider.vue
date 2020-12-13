@@ -26,7 +26,7 @@
                     <h2 class="slider slider__heading">Lust auf ein kleines Quiz?</h2>
                     <p class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz, title: title }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
                     <div class="slider slider__video-container">
-                        <iframe class="slider slider__video" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+                        <iframe class="slider slider__video" :src="video"></iframe>
                     </div>    
                     <p class="slider slider__follow">Folge uns auf</p>
                     <div class="slider slider__social-media-icons">
@@ -59,7 +59,8 @@ export default {
         id: Number,
         title: String,
         quiz: [Array, Boolean],
-        firstPicture: [String, Boolean]
+        firstPicture: [String, Boolean],
+        video: String
        
     },
     
