@@ -2,6 +2,7 @@
 <div class="slider slider--background" >
     <font-awesome-icon class="slider slider__quit-button" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
+         <!-- FIRST SLIDE -->
          <splide-slide>
                 <img class="slider slider__image slider__image-front" :src="firstPicture">
                 <div class="slider slider__firstSlide slider__firstSlide-title">
@@ -13,7 +14,8 @@
                     <p class="slider slider__firstSlide-text" v-html="title"></p>
                     </div>
                 </div>     
-        </splide-slide>   
+        </splide-slide>
+        <!-- All SLIDES -->
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
                 <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
                 <div class="slider slider__text-box-front" v-bind:class="{ 'slider--is-left': slide.position }">
@@ -26,6 +28,7 @@
                 </div>
             </div>
         </splide-slide>
+          <!-- LAST SLIDE -->
         <splide-slide >    
             <div class="slider slider__image slider__lastSlide">    
                 <div class="slider slider__container">
@@ -117,6 +120,9 @@ export default {
  font-family: Lato, sans-serif;
 }
 
+
+ 
+
 .slider {
     &--background {  
         position: fixed;
@@ -169,7 +175,7 @@ export default {
         transform: translate(-50%, -50%);
         background: rgba(97, 97, 97, 0.84);
         min-width: 25%;
-        height: 60px;
+        min-height: 60px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -334,7 +340,13 @@ $breakpoint-phone: 430px;
 
 // Smartphone & Tablet Portrait
 @media only screen and (max-width : 1023px) and (orientation: portrait) {
+    
+    ::v-deep .splide__arrows--mobile {
+            display: none !important;
+    }
+
     .slider {
+
          &__image { 
             width: 90%;
             height: 60%;
