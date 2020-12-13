@@ -299,7 +299,12 @@ export default {
             this.answerSelected = null
             if (this.currentQuestionIndex === this.questionCount) {
                 this.quizFinished = true
+                if((this.correctAnswersCount * 100 / this.questionCount) > 70) {
+                     this.$confetti.start();
+                    setTimeout(() => this.$confetti.stop(), 3000);
+                }
             }
+          
         },
         setSelected(value) {
             const values = value.split(",")
