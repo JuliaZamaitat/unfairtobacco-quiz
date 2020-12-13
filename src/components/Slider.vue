@@ -99,6 +99,8 @@ export default {
                         position: this.slides[slide].diashow_position_text[0] === "links",
                         text: this.slides[slide].diashow_text,
                         imageURL: this.slides[slide].diashow_bild.sizes["1536x1536"],
+                        imageURLMedium: this.slides[slide].diashow_bild.sizes.medium,
+                        imageURLSmall: this.slides[slide].diashow_bild.sizes.mailchimp,
                         imageAlt: this.slides[slide].diashow_bild.alt
                     })
                 }

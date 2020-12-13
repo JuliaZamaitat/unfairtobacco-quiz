@@ -17,10 +17,8 @@
         <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
         <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText()"></p> 
 
-    
-
     <!-- ANSWERS -->
-
+    
        <!-- MULTIPLE CHOICE -->
         <div v-if="quizType === 'multiple_choice'" class="quiz quiz__answers quiz__multiple-choice">
             <ul class="quiz quiz__answers-multiple-list">
@@ -398,16 +396,12 @@ export default {
 
 <style lang="scss" scoped>
 
-
-
 * {
  font-family: Lato, sans-serif;
  color: black;
 }
 
-
 .quiz {
-  
     &--viewport {
       width: 100%;
       height: 100%;   
