@@ -3,10 +3,16 @@
     <font-awesome-icon class="slider slider__quit-button" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
          <splide-slide>
-                <img class="slider slider__firstSlide slider__image slider__image-front" :src="firstPicture">
+                <img class="slider slider__image slider__image-front" :src="firstPicture">
                 <div class="slider slider__firstSlide slider__firstSlide-title">
                     <p class="slider slider__firstSlide-text" v-html="title"></p>
                 </div>
+                <div class="slider slider__image slider__image-back">
+                    <img class="slider slider__image" :src="firstPicture"> 
+                    <div class="slider slider__firstSlide slider__firstSlide-title">
+                    <p class="slider slider__firstSlide-text" v-html="title"></p>
+                    </div>
+                </div>     
         </splide-slide>   
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
                 <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
@@ -303,7 +309,6 @@ $breakpoint-phone: 430px;
             height: 40%;
             max-height: 40%;
         }
-
         &__text-box-front {
             position: absolute; 
             bottom: 32%; 
@@ -395,7 +400,6 @@ $breakpoint-phone: 430px;
             height: 60%;
             max-height: 60%;
         }
-
 
         &__text-box-back { 
             width: 100%;
