@@ -1,7 +1,7 @@
 <template>
-    <div class="diashow diashow--diashow" @click.self="toggleSlides" >
+    <div class="diashow diashow--diashow" :style="{ backgroundImage: 'url(' + thumbnailMedium + ')' }" @click.self="toggleSlides" >
         <h2 class="diashow diashow__title">{{ title }}</h2>
-        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz"></Slider>
+        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnailLarge"></Slider>
     </div>
 </template>
 
@@ -28,10 +28,18 @@ export default {
     },
     methods: {
         toggleSlides () {
-            console.log("toggle", this.id)
             this.showSlider = !this.showSlider;
-         }
+         } 
+    },
+    computed: {
+        thumbnailMedium() {
+            return this.slides[0]?.thumbnail.sizes.medium
+        },
+        thumbnailLarge() {
+            return this.slides[0]?.thumbnail.sizes["1536x1536"]
+        }
     }
+
 }
 </script>
 
@@ -42,7 +50,7 @@ export default {
      
     &--diashow {
         position: relative;
-        background-image: url(https://www.zeitenspiegel.de/image/2/625/410/5/media/images/malawi-tabak_neon03-11.jpg);
+        background-size: cover;
         height: 318px;
         width: 387px;
         max-width: 80%;

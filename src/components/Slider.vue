@@ -2,6 +2,12 @@
 <div class="slider slider--background" >
     <font-awesome-icon class="slider slider__quit-button" :icon="['fas', 'times']" size="lg" @click="$emit('hide-slides')"/>
         <splide :options="options">
+         <splide-slide>
+                <img class="slider slider__firstSlide slider__image slider__image-front" :src="firstPicture">
+                <div class="slider slider__firstSlide slider__firstSlide-title">
+                    <p class="slider slider__firstSlide-text" v-html="title"></p>
+                </div>
+        </splide-slide>   
         <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
                 <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
                 <div class="slider slider__text-box-front" v-bind:class="{ 'slider--is-left': slide.position }">
@@ -52,7 +58,8 @@ export default {
         slides: [Array, Boolean],
         id: Number,
         title: String,
-        quiz: Array
+        quiz: [Array, Boolean],
+        firstPicture: [String, Boolean]
        
     },
     
@@ -73,9 +80,11 @@ export default {
     },
     computed: {
         slidesAndTexts() { 
+            console.log(this.slides)
             const slidesAndTexts = new Array()
             if (Array.isArray(this.slides)) {
                 for(var slide in this.slides){
+                    if(!this.slides[slide].diashow_bild || !this.slides[slide].diashow_text) return []
                     slidesAndTexts.push({
                         position: this.slides[slide].diashow_position_text[0] === "links",
                         text: this.slides[slide].diashow_text,
@@ -84,7 +93,6 @@ export default {
                     })
                 }
             }
-            console.log(slidesAndTexts)
             return slidesAndTexts
         }
     },
@@ -98,7 +106,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-
+* {
+ font-family: Lato, sans-serif;
+}
 
 .slider {
     &--background {  
@@ -145,6 +155,28 @@ export default {
         display: none;
     }
 
+    &__firstSlide-title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(97, 97, 97, 0.84);
+        min-width: 25%;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    &__firstSlide-text {
+        font-weight: bold;
+        color: #FFFFFF;
+        font-size: 20px;
+        
+       
+    }
+
     &__text-box-front {
         position: absolute; 
         bottom: 12%; 
@@ -175,7 +207,6 @@ export default {
     }
 
     &__text { 
-        font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: 550;
         font-size: 16px;
