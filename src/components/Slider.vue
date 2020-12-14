@@ -16,8 +16,9 @@
                 </div>     
         </splide-slide>
         <!-- All SLIDES -->
-        <splide-slide v-for="slide in slidesAndTexts" :key="slide.imageURL">
+        <splide-slide v-for="(slide, index) in slidesAndTexts" :key="slide.imageURL">
                 <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
+                    <font-awesome-icon class="slider slider__tooltip" :class="{'slider__tooltip-first-slide': index === 0}" :icon="['fas', 'hand-point-up']" size="lg" />
                 <div class="slider slider__text-box-front" v-bind:class="{ 'slider--is-left': slide.position }">
                     <p class="slider slider__text" v-html="slide.text"></p>
                 </div>
@@ -146,6 +147,22 @@ export default {
         &:hover {
             color: rgb(255, 255, 255, 0.7);
         }
+    }
+
+    
+    &__tooltip {
+        display: none;
+    }
+
+     &__tooltip-first-slide {
+        display: none;
+        position: absolute;
+        top: 67vh;
+        left: 50vw;
+        color: white;
+        z-index: 3000;
+        font-size: 25px;
+        opacity: 0.6;
     }
 
     .splide {  
@@ -312,6 +329,9 @@ $breakpoint-phone: 430px;
 
 @media  only screen and (max-width : 1200px) and (orientation: portrait){
  .slider {
+      &__tooltip-first-slide {
+            display: block; 
+        }
          &__image { 
             width: 80%;
             height: 40%;
@@ -348,6 +368,10 @@ $breakpoint-phone: 430px;
     }
 
     .slider {
+
+        &__tooltip-first-slide {
+            display: block; 
+        }
 
          &__image { 
             width: 90%;
@@ -409,6 +433,10 @@ $breakpoint-phone: 430px;
     }
 
     .slider {
+         &__tooltip-first-slide {
+            display: block;
+        }
+
         &__image { 
             width: 100%;
             height: 60%;
@@ -447,6 +475,10 @@ $breakpoint-phone: 430px;
 @media only screen and (max-width: 850px) and (max-height: 450px)
  and (orientation: landscape) {
     .slider {
+        &__tooltip-first-slide {
+            display: block; 
+        }
+
         &__image-front {
             display: none;
         }

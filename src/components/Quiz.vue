@@ -689,12 +689,15 @@ export default {
                 border: 2px solid rgb(81, 214,35);
                 color: rgb(81, 214,35);
                 padding: 10px 15px;
+                font-size: 12px;
+
             }
 
             .answer--false {
-                 border: 2px solid rgb(214, 35,35);
+                border: 2px solid rgb(214, 35,35);
                 color: rgb(214, 35,35);
                 padding: 10px 15px;
+                font-size: 12px;
             }
         }
        
