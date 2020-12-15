@@ -2,6 +2,7 @@
   <div class="diashows diashows--viewport">
     <h1 class="diashows diashows__heading">Diashows & Quiz</h1>
       <div class="diashows diashows__line"></div>
+      <pulse-loader :loading="loading" :color="color"></pulse-loader>
         <div class="diashows diashows__klassenstufen" v-for="(klassenstufe, index) in klassenstufen" :key="index">
           <h2 class="diashows diashows__title" v-html=klassenstufe></h2>
           <div class="diashows diashows--grid" v-for="(diashow, innerIndex) in groupedDiashows(klassenstufe)" :key="innerIndex">
@@ -20,8 +21,9 @@
 </template>
 
 <script>
-import ApiService from '@/services/ApiService.js'
 import Diashow from '@/components/Diashow'
+import axios from 'axios'
+const url = 'https://unfairtobacco.org/wp-json/endpoint/v1/'
 
 export default {
   components: {
@@ -31,7 +33,9 @@ export default {
   data () {
     return {
       lang: "de",
-      diashows: []
+      diashows: [],
+      loading: true,
+      color: "rgb(143, 44,27)"
      }
   },
   created () {
@@ -39,12 +43,17 @@ export default {
   },
   methods: {
     async getDiashows (lang) {
-      this.diashows = await ApiService.getDiashows(lang)
-    },
+      this.loading = true
+      return axios.get(url + 'diashows/' + lang)
+        .then((diashows) => { this.loading = false; this.diashows = diashows.data })
+        .catch((err) => console.log(err))
+      },
+
     groupedDiashows(klassenstufe) {
         return this.diashows
             .filter(diashow => diashow.acf.diashow_klassenstufe[0].name === klassenstufe)
-    }
+    },
+
   },
   computed: {
     klassenstufen() {
