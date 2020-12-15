@@ -17,7 +17,7 @@
 
     <!-- Task for question -->   
         <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
-        <p v-if="this.isValidated" class="quiz quiz__question-explanation" v-html="solutionText()"></p> 
+        <p v-if="this.isValidated" class="quiz quiz__question-explanation" :class="{'quiz__question--correct-solution': this.correct, 'quiz__question--false-solution': !this.correct }" v-html="solutionText()"></p> 
 
     <!-- ANSWERS -->
     
@@ -233,6 +233,8 @@ export default {
         },
         validateAnswers() {
             this.isValidated = true;
+            window.scrollTo(0,0);  
+
 
             switch (this.quizType) {
                 case "multiple_choice": 
@@ -242,13 +244,9 @@ export default {
                     }
                     break
                 case "lueckentext": {
-                    let errorCount = 0
-                    for(var element in this.correctLuecke){
-                        if (this.correctLuecke[element]?.correct === false) errorCount += 1
-                    }
-                    if (errorCount === 0) {
-                        this.correctAnswersCount +=1
+                    if(this.correctLuecke.length === this.currentAnswers.length){
                          this.correct = true
+                         this.correctAnswersCount += 1
                     }
                     break
                 }
@@ -266,7 +264,7 @@ export default {
                     if (this.correct) this.correctAnswersCount +=1
                     break
                 default:
-                   return ""  
+                   return ""
             }
         },
         isCorrect(answer) {
@@ -466,12 +464,21 @@ $grey-background:rgba(128,127,127,1);
             position: relative;
         }
 
+
         &-explanation {
             font-style: italic;
             font-weight: bold;
             margin-top: 80px;
             margin-bottom: 30px;
             color: #000000;
+        }
+
+        &--correct-solution {
+            color: $correct-answer;
+        }
+
+         &--false-solution {
+            color: $false-answer;
         }
 
         p {
@@ -576,6 +583,7 @@ $grey-background:rgba(128,127,127,1);
                 height: 100%;
                 border-radius: 5px;
                 cursor: pointer;
+
                 &:hover, &:focus, &:active {
                     color: $dark-red;
                     border: 2px solid $dark-red;
