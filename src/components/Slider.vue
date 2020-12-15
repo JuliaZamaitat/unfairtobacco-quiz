@@ -33,10 +33,10 @@
         <splide-slide >    
             <div class="slider slider__image slider__lastSlide">    
                 <div class="slider slider__container">
-                    <h2 v-if="lang === 'de'" class="slider slider__heading">Lust auf ein kleines quiz?</h2>
-                    <h2 v-else class="slider slider__heading">Fancy a little Quiz?</h2>
-                    <p v-if="lang === 'de'" class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
-                    <p v-else class="slider slider__link-text">Click <router-link :to="{name: 'Quiz', params: {quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">here</a></router-link> to test your knowledge!</p>
+                    <h2 v-if="lang === 'de'" class="slider slider__heading">Lust auf ein kleines Quiz?</h2>
+                    <h2 v-else class="slider slider__heading">Fancy a little quiz?</h2>
+                    <p v-if="lang === 'de'" class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
+                    <p v-else class="slider slider__link-text">Click <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">here</a></router-link> to test your knowledge!</p>
                     <div class="slider slider__video-container">
                         <iframe class="slider slider__video" :src="video"></iframe>
                     </div>    

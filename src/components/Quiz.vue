@@ -180,8 +180,8 @@ export default {
         return {
             questionCount: null,
             correctAnswersCount: 0,
-            quizFinished: true,
-            currentQuestionIndex: 0,
+            quizFinished: false,
+            currentQuestionIndex: 3,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -191,7 +191,7 @@ export default {
             ourAnswer: null,
             draggableLists: [],
             storedAnswers: [],
-            onlyOneSelected: false
+            onlyOneSelected: false,
         }
     },
     watch: {
