@@ -14,25 +14,6 @@
               :videoUrl="diashow.acf.videoLink"
               :quiz="diashow.acf.quiz">
             </Diashow>
-            <Diashow class="diashows diashows__diashow"
-              :id="diashow.ID"
-              :title="diashow.post_title"
-              :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
-              :slides="diashow.acf.diashow_slides"
-              :thumbnail="diashow.acf.thumbnail"
-              :videoUrl="diashow.acf.videoLink"
-              :quiz="diashow.acf.quiz">
-            </Diashow>
-            <Diashow class="diashows diashows__diashow"
-              :id="diashow.ID"
-              :title="diashow.post_title"
-              :classLevel="diashow.acf.diashow_klassenstufe[0].name" 
-              :slides="diashow.acf.diashow_slides"
-              :thumbnail="diashow.acf.thumbnail"
-              :videoUrl="diashow.acf.videoLink"
-              :quiz="diashow.acf.quiz">
-            </Diashow>
-           
             </div>
         </div>
       </div>
@@ -49,15 +30,16 @@ export default {
   name: 'Diashows',
   data () {
     return {
+      lang: "de",
       diashows: []
-    }
+     }
   },
   created () {
-    this.getDiashowsDe()
+    this.getDiashows(this.lang)
   },
   methods: {
-    async getDiashowsDe () {
-      this.diashows = await ApiService.getDiashowsDe()
+    async getDiashows (lang) {
+      this.diashows = await ApiService.getDiashows(lang)
     },
     groupedDiashows(klassenstufe) {
         return this.diashows
@@ -68,9 +50,12 @@ export default {
     klassenstufen() {
         const klassenstufen = new Set();
         this.diashows.forEach(diashow => klassenstufen.add(diashow.acf.diashow_klassenstufe[0].name));
-        return Array.from(klassenstufen); 
+        let sortedKlassenstufen = Array.from(klassenstufen);  
+        return sortedKlassenstufen.sort(function (a,b) {
+            return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+        });
     }
-},
+  },
 }
 
 </script>
