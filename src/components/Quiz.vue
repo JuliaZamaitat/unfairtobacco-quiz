@@ -168,7 +168,7 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 0,
+            currentQuestionIndex: 2,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -244,10 +244,18 @@ export default {
                     }
                     break
                 case "lueckentext": {
-                    if(this.correctLuecke.length === this.currentAnswers.length){
-                         this.correct = true
-                         this.correctAnswersCount += 1
+                    const filtered = this.correctLuecke.filter(Boolean); //remove empty entries
+                    console.log(filtered);
+                    for(var i in filtered){
+                        if (filtered[i].correct === false) {
+                            console.log("here")
+                            this.correct = false;
+                            return
+                        }
                     }
+                    this.correct = true
+                    this.correctAnswersCount += 1
+                
                     break
                 }
                 case "free_answer":
