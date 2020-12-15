@@ -168,7 +168,7 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 3,
+            currentQuestionIndex: 0,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -636,7 +636,7 @@ $grey-background:rgba(128,127,127,1);
             margin: 0 auto;
             text-align: justify;
             font-size: 17px;
-            line-height: 170%;
+            line-height: 260%;
             font-weight: bold;
             
             &-select{
@@ -644,6 +644,10 @@ $grey-background:rgba(128,127,127,1);
                 margin: 5px 0;
                 border: 1px solid $dark-red;
                 border-radius: 6px;
+                outline-color: $dark-red;
+                font-weight: bold;
+                font-family: Lato, sans-serif;
+                font-size: 17px;
             }
             &-text-luecke {
                 display: inline;

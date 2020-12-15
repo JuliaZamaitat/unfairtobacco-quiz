@@ -358,12 +358,8 @@ $breakpoint-phone: 430px;
          &__follow {
             font-size: 1em;
         }  
- }
-
- 
-
+    }
 }
-
 
 // Smartphone & Tablet Portrait
 @media only screen and (max-width : 1023px) and (orientation: portrait) {
