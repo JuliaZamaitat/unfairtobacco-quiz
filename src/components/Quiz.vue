@@ -181,7 +181,7 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 3,
+            currentQuestionIndex: 0,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
