@@ -13,7 +13,8 @@
               :slides="diashow.acf.diashow_slides"
               :thumbnail="diashow.acf.thumbnail"
               :videoUrl="diashow.acf.videoLink"
-              :quiz="diashow.acf.quiz">
+              :quiz="diashow.acf.quiz"
+              :lang="lang">
             </Diashow>
             </div>
         </div>

@@ -33,12 +33,15 @@
         <splide-slide >    
             <div class="slider slider__image slider__lastSlide">    
                 <div class="slider slider__container">
-                    <h2 class="slider slider__heading">Lust auf ein kleines Quiz?</h2>
-                    <p class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {id: id, quiz: quiz, title: title }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
+                    <h2 v-if="lang === 'de'" class="slider slider__heading">Lust auf ein kleines quiz?</h2>
+                    <h2 v-else class="slider slider__heading">Fancy a little Quiz?</h2>
+                    <p v-if="lang === 'de'" class="slider slider__link-text">Teste <router-link :to="{name: 'Quiz', params: {quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">hier</a></router-link> dein Wissen</p>
+                    <p v-else class="slider slider__link-text">Click <router-link :to="{name: 'Quiz', params: {quiz: quiz, title: title, lang: lang }}"><a class="slider slider__link">here</a></router-link> to test your knowledge!</p>
                     <div class="slider slider__video-container">
                         <iframe class="slider slider__video" :src="video"></iframe>
                     </div>    
-                    <p class="slider slider__follow">Folge uns auf</p>
+                    <p v-if="lang === 'de'" class="slider slider__follow">Folge uns auf</p>
+                    <p v-else class="slider slider__follow">Follow us on</p>
                     <div class="slider slider__social-media-icons">
                         <a href="https://www.facebook.com/unfairtobacco"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'facebook-square']" /></a>
                         <a href="https://www.instagram.com/unfairtobacco/"><font-awesome-icon class="slider slider__icon" :icon="['fab', 'instagram-square']" /></a>
@@ -70,7 +73,8 @@ export default {
         title: String,
         quiz: [Array, Boolean],
         firstPicture: [String, Boolean],
-        video: String
+        video: String,
+        lang: String
        
     },
     

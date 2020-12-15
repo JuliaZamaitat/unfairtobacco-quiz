@@ -120,30 +120,42 @@
         <!-- POSITIVE SCREEN -->
         <div v-if="this.quizFinished && ((correctAnswersCount * 100) / questionCount) > 70" class="quiz quiz__container">
             <div class="quiz quiz__question quiz__question--congrats">
-                <div class="quiz quiz__question--background quiz__question--background-congrats">
+                <div v-if="lang === 'de'" class="quiz quiz__question--background quiz__question--background-congrats">
                     <p>Herzlichen Glückwunsch! <br> Du hast {{ correctAnswersCount }} von {{ questionCount}} Fragen richtig beantwortet!</p>
                 </div>
+                 <div v-else class="quiz quiz__question--background quiz__question--background-congrats">
+                    <p>Congrats! <br> You answered {{ correctAnswersCount }} out of {{ questionCount}} questions correctly!</p>
+                </div>
             </div> 
-            <p class="quiz quiz__finished-text">Du hast dein Wissen in diesem Quiz unter Beweis gestellt!</p>
-            <p class="quiz quiz__finished-text--share">Teile das mit deinen Freunden!</p>
+            <p v-if="lang === 'de'" class="quiz quiz__finished-text">Du hast dein Wissen in diesem Quiz unter Beweis gestellt!</p>
+            <p v-else class="quiz quiz__finished-text">You proved your knowledge in this quiz!</p>
+            <p v-if="lang === 'de'" class="quiz quiz__finished-text--share">Teile das mit deinen Freunden!</p>
+            <p v-else class="quiz quiz__finished-text--share">Share this with your friends!</p>
              <div class="quiz quiz__social-media-icons">
                 <a href="https://www.facebook.com/unfairtobacco"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'facebook-square']" /></a>
                 <a href="https://www.instagram.com/unfairtobacco/"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'instagram-square']" /></a>
                 <a href="https://twitter.com/unfairtobacco"><font-awesome-icon class="quiz quiz__icon" :icon="['fab', 'twitter-square']" /></a>
             </div>
-            <p class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+            <p v-if="lang === 'de'" class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+            <p v-else class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Back to diashows</a></router-link></p>
+
 
         </div>
         <!-- NEGATIVE SCREEN -->
         <div v-else-if="this.quizFinished" class="quiz quiz__container">
             <div class="quiz quiz__question quiz__question--no-congrats">
                 <div class="quiz quiz__question--background quiz__question--background-no-congrats">
-                    <p>Schade! <br> Leider waren nicht alle Antworten richtig!</p>
+                    <p v-if="lang === 'de'">Schade! <br> Leider waren nicht alle Antworten richtig!</p>
+                    <p v-else>Oh no! <br> Unfortunately, not all answers were correct!</p>
                 </div>
             </div>
-            <p class="quiz quiz__finished-text">Möchtest du es nochmal probieren?</p>
-            <button class="quiz quiz__finished-try-again" @click="resetData()">Neuer Versuch</button>
-            <p class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+            <p v-if="lang === 'de'" class="quiz quiz__finished-text">Möchtest du es nochmal probieren?</p>
+            <p v-else class="quiz quiz__finished-text">Do you want to try again?</p>
+            <button v-if="lang === 'de'" class="quiz quiz__finished-try-again" @click="resetData()">Neuer Versuch</button>
+            <button v-else class="quiz quiz__finished-try-again" @click="resetData()">Try again</button>
+            <p  v-if="lang === 'de'" class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
+            <p v-else class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Back to diashows</a></router-link></p>
+
         </div>
     </div>
 
@@ -160,15 +172,16 @@ export default {
         },
     props: {
         title: String,
-        quiz: Array
+        quiz: Array,
+        lang: String
     },
 
     data () {
         return {
             questionCount: null,
             correctAnswersCount: 0,
-            quizFinished: false,
-            currentQuestionIndex: 2,
+            quizFinished: true,
+            currentQuestionIndex: 0,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -388,13 +401,13 @@ export default {
         currentTask() {
             switch (this.quizType) {
                  case "multiple_choice": 
-                    return "Wähle eine richtige Antwort aus!"
+                    return this.lang === "de" ? "Wähle eine richtige Antwort aus!" : "Choose one right answer!"
                 case "lueckentext":
-                    return "Wähle die passenden Begriffe aus!"
+                    return this.lang === "de" ? "Wähle die passenden Begriffe aus!" : "Choose the right terms!"
                 case "free_answer":
-                     return "Schreib hier deine Anwort!"
+                     return this.lang === "de" ? "Schreib hier deine Anwort!" : "Write your answer here!"
                 case "connection_quiz":
-                     return "Ordne die passenden Beschreibungen zu!"
+                     return this.lang === "de" ? "Ordne die passenden Beschreibungen zu!" : "Match the appropriate descriptions!"
                 default:
                    return ""  
             }

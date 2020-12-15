@@ -1,7 +1,7 @@
 <template>
     <div class="diashow diashow--diashow" :class="{'closed': !showSlider}" :style="{ backgroundImage: 'url(' + thumbnailMedium + ')' }" @click.self="toggleSlides" >
         <h2 class="diashow diashow__title" @click.self="toggleSlides">{{ title }}</h2>
-        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnailLarge" :video="videoUrl"></Slider>
+        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnailLarge" :video="videoUrl" :lang="lang"></Slider>
     </div>
 </template>
 
@@ -20,7 +20,8 @@ export default {
         slides: [Array, Boolean],
         quiz: [Array, Boolean],
         thumbnail: Object,
-        videoUrl: String
+        videoUrl: String,
+        lang: String
     },
 
     data () {
