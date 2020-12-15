@@ -399,6 +399,12 @@ export default {
 
 <style lang="scss" scoped>
 
+$dark-red: rgb(143, 44,27);
+$false-answer:rgb(214, 35,35);
+$correct-answer: rgb(81, 214,35);
+$grey-background:rgba(128,127,127,1);
+
+
 * {
  color: black;
 }
@@ -421,7 +427,7 @@ export default {
       height: 39px; 
 
       &--red {
-        border-top: 3px solid rgb(143, 44,27);
+        border-top: 3px solid $dark-red;
         margin-top: 40px;
         margin-bottom: 0;
         height: 20px; 
@@ -448,7 +454,7 @@ export default {
     }
 
     &__question {
-        background-color: rgb(143, 44,27);
+        background-color: $dark-red;
         padding: 15px;
         border-radius: 9px; 
         position: absolute;
@@ -478,12 +484,12 @@ export default {
         }
 
         &--congrats {
-             background-color: rgb(81, 214,35);
+             background-color: $correct-answer;
              
         }
 
         &--no-congrats {
-             background-color: rgb(214, 35,35);
+             background-color:$false-answer;
         }
 
         &--background {
@@ -512,7 +518,7 @@ export default {
                 padding: 1.5em 0.3em 1.3em;
                 margin: 4% auto 0;
                 color: white;
-                background-color: rgb(143, 44,27);
+                background-color: $dark-red;
                 border-style: none;
                 border-radius: 11px;
                 font-weight: bold;
@@ -522,8 +528,8 @@ export default {
             
                 &:hover, &:focus, &:active {
                     background-color: white;
-                    color: rgb(143, 44,27);
-                    border: 2px solid rgb(143, 44,27);
+                    color: $dark-red;
+                    border: 2px solid $dark-red;
                     transition: background-color .3s ease-out;
                     outline: none;
                 }
@@ -531,7 +537,7 @@ export default {
                 &--is-validated {
                     cursor: initial;
                      &:hover, &:focus, &:active {
-                        background-color: rgb(143, 44,27);
+                        background-color: $dark-red;
                         color: white;
                         border: 2px solid transparent;
                         transition: 0;
@@ -541,14 +547,14 @@ export default {
 
                 &--correct {
                     background-color: white !important;
-                    border: 2px solid rgb(81, 214,35) !important;
-                    color:  rgb(81, 214,35) !important;
+                    border: 2px solid $correct-answer !important;
+                    color:  $correct-answer !important;
                 }
 
                  &--false {
                     background-color: white !important;
-                    border: 2px solid rgb(214, 35,35) !important;
-                    color:  rgb(214, 35,35) !important;
+                    border: 2px solid$false-answer !important;
+                    color: $false-answer !important;
                 }
             }
 
@@ -563,7 +569,7 @@ export default {
             }
 
             .selected {
-                border: 2px solid rgb(143, 44,27) !important;
+                border: 2px solid $dark-red !important;
              }
 
             .answer-image {
@@ -571,8 +577,8 @@ export default {
                 border-radius: 5px;
                 cursor: pointer;
                 &:hover, &:focus, &:active {
-                    color: rgb(143, 44,27);
-                    border: 2px solid rgb(143, 44,27);
+                    color: $dark-red;
+                    border: 2px solid $dark-red;
                     outline: none;
                 } 
             }
@@ -592,7 +598,7 @@ export default {
             width: 90%;
             min-height: 170px;
             border-radius: 10px;
-            border: 3px solid rgba(128,127,127,1);
+            border: 3px solid $grey-background;
             resize: none;
             overflow: auto;
             outline: none;
@@ -600,11 +606,11 @@ export default {
 
 
             &:hover, &:focus, &:active {
-                border: 2px solid rgb(143, 44,27); 
+                border: 2px solid $dark-red; 
             }
 
             &--correct {
-                border: 3px solid rgb(81, 214,35) !important;
+                border: 3px solid $correct-answer !important;
                 background-color: white;
             }
         }
@@ -636,7 +642,7 @@ export default {
             &-select{
                 height: 30px;
                 margin: 5px 0;
-                border: 1px solid rgb(143, 44,27);
+                border: 1px solid $dark-red;
                 border-radius: 6px;
             }
             &-text-luecke {
@@ -649,13 +655,13 @@ export default {
 
                 } 
                 .answer--correct {
-                     border: 2px solid rgb(81, 214,35);
-                     color: rgb(81, 214,35);
+                     border: 2px solid $correct-answer;
+                     color: $correct-answer;
                 }
                  .answer--false {
-                    border:  2px solid rgb(214, 35,35);
+                    border:  2px solid $false-answer;
                     opacity: 1;
-                    color: rgb(214, 35,35) !important;
+                    color: $false-answer !important;
                 }
                     
             }
@@ -673,7 +679,7 @@ export default {
             .descriptions {
                 width: 100%;
                 margin: 0 auto;
-                background-color: rgb(143, 44,27);
+                background-color: $dark-red;
                 color: white;
                 margin-bottom: 20px;
                 padding: 10px 15px;
@@ -690,7 +696,7 @@ export default {
                 width: 100%;
                 margin: 0 auto;
                 background-color: white;
-                // border: 1px solid rgb(143, 44,27);
+                // border: 1px solid $dark-red;
                 border-radius: 6px;
                 min-height: 40px;
                 margin-bottom: 20px;
@@ -698,18 +704,20 @@ export default {
                 // padding: 10px 15px;
             }
             .answer--correct {
-                border: 2px solid rgb(81, 214,35);
-                color: rgb(81, 214,35);
+                border: 2px solid $correct-answer;
+                color: $correct-answer;
                 padding: 10px 15px;
                 font-size: 12px;
+                font-weight: bold;
 
             }
 
             .answer--false {
-                border: 2px solid rgb(214, 35,35);
-                color: rgb(214, 35,35);
+                border: 2px solid $false-answer;
+                color: $false-answer;
                 padding: 10px 15px;
                 font-size: 12px;
+                font-weight: bold;
             }
         }
        
@@ -723,8 +731,8 @@ export default {
     &__button {
         font-size: 16px;
         font-weight: bold;
-        color: rgb(143, 44,27);
-        border: 2px solid rgb(143, 44,27);
+        color: $dark-red;
+        border: 2px solid $dark-red;
         border-radius: 11px;
         padding: 8px 23px 6px;
         margin-top: 25px;
@@ -733,7 +741,7 @@ export default {
 
         &:hover, &:focus, &:active {
             background-color: white;
-            border: 2px solid rgb(143, 44,27);
+            border: 2px solid $dark-red;
             transition: background-color .2s ease-out;
             outline: none;
         }

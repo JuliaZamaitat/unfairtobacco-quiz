@@ -119,6 +119,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 
+@keyframes zoomInOut {
+    0% {
+        transform: scale(1,1);
+    }
+    50% {
+        transform: scale(1.2,1.2);
+    }
+    100% {
+        transform: scale(1,1);
+    }
+}
+
 .slider {
     &--background {  
         position: fixed;
@@ -320,7 +332,8 @@ $breakpoint-phone: 430px;
 @media  only screen and (max-width : 1200px) and (orientation: portrait){
  .slider {
       &__tooltip-first-slide {
-            display: block; 
+            display: block;
+            animation: zoomInOut 3s infinite;
         }
          &__image { 
             width: 80%;
@@ -345,8 +358,10 @@ $breakpoint-phone: 430px;
          &__follow {
             font-size: 1em;
         }  
-
  }
+
+ 
+
 }
 
 
@@ -360,7 +375,9 @@ $breakpoint-phone: 430px;
     .slider {
 
         &__tooltip-first-slide {
-            display: block; 
+            display: block;
+            animation: zoomInOut 3s infinite;
+ 
         }
 
          &__image { 
@@ -425,6 +442,8 @@ $breakpoint-phone: 430px;
     .slider {
          &__tooltip-first-slide {
             display: block;
+            animation: zoomInOut 3s infinite;
+
         }
 
         &__image { 
@@ -466,7 +485,8 @@ $breakpoint-phone: 430px;
  and (orientation: landscape) {
     .slider {
         &__tooltip-first-slide {
-            display: block; 
+            display: block;
+            animation: zoomInOut 3s infinite; 
         }
 
         &__image-front {
