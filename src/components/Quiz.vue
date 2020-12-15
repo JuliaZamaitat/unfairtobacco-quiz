@@ -78,7 +78,7 @@
                 <div v-for="(liste, i) in draggableLists" :key="liste.id">
                      <p class="expression">{{ storedAnswers[i].connection_expression }}</p>
                     <div class="drop-area">
-                        <draggable group="drop-quiz" :list="liste" :disabled="disable(liste)">
+                        <draggable group="drop-quiz" :list="liste" @change="disable(liste)">
                             <div class="descriptions" v-for="item in liste" :key="item.id">
                                 {{ item ? item.connection_description : item }}
                             </div>
@@ -94,7 +94,7 @@
             </draggable>
             
             <!-- Different conditions apply for this button -->
-            <button v-if="currentAnswers.length === 0 && !this.isValidated" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
+            <button v-if="currentAnswers.length === 0 && !this.isValidated && this.onlyOneSelected" v-on:click="validateAnswers()" class="quiz quiz__button">Auflösung</button>
             </div>
            
            <!-- After Validation -->
@@ -168,7 +168,7 @@ export default {
             questionCount: null,
             correctAnswersCount: 0,
             quizFinished: false,
-            currentQuestionIndex: 0,
+            currentQuestionIndex: 3,
             answerSelected: null,
             isValidated: false,
             freeAnswer: null,
@@ -177,7 +177,8 @@ export default {
             correct: false,
             ourAnswer: null,
             draggableLists: [],
-            storedAnswers: []
+            storedAnswers: [],
+            onlyOneSelected: false
         }
     },
     watch: {
@@ -212,10 +213,12 @@ export default {
 
         },
         disable(){
-            // this.answerSelected = true;
-            // if (value.length === 1) {
-            //     return true
-            // }
+            this.answerSelected = true
+            this.onlyOneSelected = true
+            for(var liste in this.draggableLists) {
+                if(this.draggableLists[liste].length > 1) this.onlyOneSelected = false;
+            }
+           
         },
         toggleAnswer(answer) {
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
@@ -609,7 +612,6 @@ export default {
         &-free-answer-solution {
             text-align: left;
             font-style: italic;
-            font-weight: bold;
             font-size: 14px;
             width: 90%;
             margin: 30px auto;
@@ -679,6 +681,9 @@ export default {
                 font-size: 12px;
                 border-radius: 6px;
                 min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .drop-area {
@@ -735,11 +740,10 @@ export default {
     }
 
     &__finished-text {
-
         font-weight: bold;
         font-size: 18px;
         margin: 0 auto;
-        margin-top: 200px;
+        margin-top: 230px;
         width: 80%;
         line-height: 160%;
         
@@ -859,7 +863,12 @@ export default {
              font-size: 14px;
              margin-top: 40px;
          }
-    } 
+        
+
+    &__finished-text {
+        margin-top: 50px;
+    }
+    }
 }
 </style>
 
