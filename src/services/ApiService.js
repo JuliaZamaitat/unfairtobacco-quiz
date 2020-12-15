@@ -1,16 +1,10 @@
 import axios from 'axios'
-const url = 'https://unfairtobacco.org/wp-json/endpoint/v1/diashows/'
+const url = 'https://unfairtobacco.org/wp-json/endpoint/v1/'
 
 export default {
-  async getDiashowsDe () {
-    return axios.get(url + 'de')
+  async getDiashows (lang) {
+    return axios.get(url + 'diashows/' + lang)
       .then((diashows) => { return diashows.data })
       .catch((err) => console.log(err))
   },
-
-  async getDiashowsEn () {
-    return axios.get(url + 'en')
-      .then((diashows) => { return diashows.data })
-      .catch((err) => console.log(err))
-  }
 }

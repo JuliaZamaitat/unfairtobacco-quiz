@@ -91,18 +91,18 @@ export default {
     },
     computed: {
         slidesAndTexts() { 
-            console.log(this.slides)
             const slidesAndTexts = new Array()
             if (Array.isArray(this.slides)) {
                 for(var slide in this.slides){
-                    if(!this.slides[slide].diashow_bild || !this.slides[slide].diashow_text) return []
+                    let currentSlide = this.slides[slide];
+                    if(!currentSlide.diashow_bild || !currentSlide.diashow_text) return []
                     slidesAndTexts.push({
-                        position: this.slides[slide].diashow_position_text[0] === "links",
-                        text: this.slides[slide].diashow_text,
-                        imageURL: this.slides[slide].diashow_bild.sizes["1536x1536"],
-                        imageURLMedium: this.slides[slide].diashow_bild.sizes.medium,
-                        imageURLSmall: this.slides[slide].diashow_bild.sizes.mailchimp,
-                        imageAlt: this.slides[slide].diashow_bild.alt
+                        position: currentSlide.diashow_position_text[0] === "links",
+                        text: currentSlide.diashow_text,
+                        imageURL: currentSlide.diashow_bild.sizes["1536x1536"], 
+                        imageURLMedium: currentSlide.diashow_bild.sizes.large,
+                        imageURLSmall: currentSlide.diashow_bild.sizes.medium,
+                        imageAlt: currentSlide.diashow_bild.alt
                     })
                 }
             }

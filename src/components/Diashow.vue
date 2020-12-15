@@ -48,8 +48,6 @@ export default {
 <style lang="scss" scoped>
 
 .diashow {
-
-     
     &--diashow {
         position: relative;
         background-size: cover;
@@ -78,8 +76,9 @@ export default {
     }
     
     &:hover {
+        box-shadow:inset 0 0 0 2000px hsla(0,0%,100%,0.6);
         .diashow__title {
-            background-color: hsla(0,0%,100%,1);
+            opacity: 1;
          }     
     }
 }

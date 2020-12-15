@@ -7,11 +7,13 @@
       <div v-if="!this.quizFinished" class="quiz quiz__container">
     
     <!-- Frage -->
+        
         <div class="quiz quiz__question">
             <div class="quiz quiz__question--background">
                 <p v-html="currentQuestion"></p> 
             </div>
         </div>
+         <div class="quiz quiz__question quiz__question-hidden"><p v-html="currentQuestion"></p></div> 
 
     <!-- Task for question -->   
         <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
@@ -115,9 +117,8 @@
       </div>    
 
 <!-- FINISHED -->
-    <div v-if="this.quizFinished" class="quiz quiz__container">
         <!-- POSITIVE SCREEN -->
-        <div v-if="((correctAnswersCount * 100) / questionCount) > 70">
+        <div v-if="this.quizFinished && ((correctAnswersCount * 100) / questionCount) > 70" class="quiz quiz__container">
             <div class="quiz quiz__question quiz__question--congrats">
                 <div class="quiz quiz__question--background quiz__question--background-congrats">
                     <p>Herzlichen Glückwunsch! <br> Du hast {{ correctAnswersCount }} von {{ questionCount}} Fragen richtig beantwortet!</p>
@@ -134,7 +135,7 @@
 
         </div>
         <!-- NEGATIVE SCREEN -->
-        <div v-else>
+        <div v-else-if="this.quizFinished" class="quiz quiz__container">
             <div class="quiz quiz__question quiz__question--no-congrats">
                 <div class="quiz quiz__question--background quiz__question--background-no-congrats">
                     <p>Schade! <br> Leider waren nicht alle Antworten richtig!</p>
@@ -147,7 +148,6 @@
     </div>
 
 
-  </div>
 </template>
 
 <script>
@@ -211,11 +211,11 @@ export default {
             this.questionCount = this.quiz.length
 
         },
-        disable(value){
-            this.answerSelected = true;
-            if (value.length === 1) {
-                return true
-            }
+        disable(){
+            // this.answerSelected = true;
+            // if (value.length === 1) {
+            //     return true
+            // }
         },
         toggleAnswer(answer) {
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
@@ -304,7 +304,7 @@ export default {
             }
           
         },
-        setSelected(value) {
+        setSelected(value) { //fuer lueckentext
             const values = value.split(",")
             const selectedValue = values[0]
             const actualValue = values[1]
@@ -427,7 +427,6 @@ export default {
     }
 
     &__title {
-       
         font-style: italic;
         font-weight: bold;
         margin: 5px 0 30px;
@@ -442,19 +441,28 @@ export default {
         padding: 20px;
         padding-top: 45px;
         margin: 0 auto;
+        position: relative;
+
     }
 
     &__question {
         background-color: rgb(143, 44,27);
         padding: 15px;
         border-radius: 9px; 
+        position: absolute;
+        left: -30px;
+        width: 100%;
+
+        &-hidden{
+            visibility: hidden;
+            position: relative;
+        }
 
         &-explanation {
             font-style: italic;
             font-weight: bold;
-            margin-top: 60px;
+            margin-top: 80px;
             margin-bottom: 30px;
-           
             color: #000000;
         }
 
@@ -728,10 +736,11 @@ export default {
     }
 
     &__finished-text {
+
         font-weight: bold;
         font-size: 18px;
         margin: 0 auto;
-        margin-top: 50px;
+        margin-top: 200px;
         width: 80%;
         line-height: 160%;
         
@@ -795,7 +804,13 @@ export default {
         }
 
         &__question {
+            position: relative;
+            left: 0;
 
+            &-hidden{
+                display: none;
+            }
+            
             &-explanation {
                 margin-top: 25px;
                 margin-bottom: 17px;
