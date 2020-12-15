@@ -119,13 +119,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-* {
- font-family: Lato, sans-serif;
-}
-
-
- 
-
 .slider {
     &--background {  
         position: fixed;
@@ -266,7 +259,6 @@ export default {
     &__heading {
         min-width: 0;
         min-height: 0;   
-        font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: bold;
         font-size: 2.3em;
@@ -278,7 +270,6 @@ export default {
     &__link-text {
         min-width: 0;
         min-height: 0;   
-        font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: bold;
         font-size: 1.8em;
@@ -293,7 +284,6 @@ export default {
     &__follow {
         min-width: 0;
         min-height: 0;   
-        font-family: Lato, sans-serif;
         font-style: italic;
         font-weight: bold;
         font-size: 1.5em;

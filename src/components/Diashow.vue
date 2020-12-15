@@ -71,7 +71,6 @@ export default {
         padding: .3em .7em;
         max-width: 80%;
         min-width: 60%;
-        font-family: Lato, sans-serif;
         font-style: normal;
         font-weight: bold;
         font-size: 20px;

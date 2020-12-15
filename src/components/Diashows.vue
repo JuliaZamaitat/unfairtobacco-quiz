@@ -70,7 +70,6 @@ export default {
     }  
 
     &__heading {
-      font-family: Lato, sans-serif;
       font-style: normal;
       font-weight: bold;
       font-size: 30px;
@@ -88,7 +87,6 @@ export default {
 
     &__diashow-title {
       margin-bottom: 2em;
-      font-family: Lato, sans-serif;
       font-style: normal;
       font-weight: 500;
       font-size: 27px;

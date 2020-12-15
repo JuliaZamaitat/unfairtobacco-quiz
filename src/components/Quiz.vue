@@ -397,7 +397,6 @@ export default {
 <style lang="scss" scoped>
 
 * {
- font-family: Lato, sans-serif;
  color: black;
 }
 
