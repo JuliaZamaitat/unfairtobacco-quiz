@@ -1,6 +1,6 @@
 <template>
-    <div class="diashow diashow--diashow" :style="{ backgroundImage: 'url(' + thumbnailMedium + ')' }" @click.self="toggleSlides" >
-        <h2 class="diashow diashow__title">{{ title }}</h2>
+    <div class="diashow diashow--diashow" :class="{'closed': !showSlider}" :style="{ backgroundImage: 'url(' + thumbnailMedium + ')' }" @click.self="toggleSlides" >
+        <h2 class="diashow diashow__title" @click.self="toggleSlides">{{ title }}</h2>
         <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnailLarge" :video="videoUrl"></Slider>
     </div>
 </template>
@@ -48,12 +48,15 @@ export default {
 <style lang="scss" scoped>
 
 .diashow {
+
+     
     &--diashow {
         position: relative;
         background-size: cover;
         height: 318px;
         width: 387px;
         max-width: 80%;
+        transition: 0.3s;
     }
 
     &__title {
@@ -72,14 +75,20 @@ export default {
         font-style: normal;
         font-weight: bold;
         font-size: 20px;
-        transition: 0.3s;
+         transition: 0.3s;
     }
     
     &:hover {
-        box-shadow:inset 0 0 0 2000px hsla(0,0%,100%,0.6);
         .diashow__title {
-            opacity: 1;
+            background-color: hsla(0,0%,100%,0);
          }     
+    }
+}
+
+.closed {
+    &:hover {
+        box-shadow:inset 0 0 0 2000px hsla(0,0%,100%,0.7);
+
     }
 }
 
