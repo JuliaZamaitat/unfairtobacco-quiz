@@ -4,26 +4,42 @@
         <splide :options="options">
          <!-- FIRST SLIDE -->
          <splide-slide>
-                <img class="slider slider__image slider__image-front" :src="firstPicture">
+            <picture>
+                <source media="(max-width: 500px)" :srcset="firstPicture.small">
+                <source media="(max-width: 1000px)" :srcset="firstPicture.medium">
+                <img class="slider slider__image slider__image-front" :src="firstPicture.large">
+            </picture>
+            <div class="slider slider__firstSlide slider__firstSlide-title">
+                <p class="slider slider__firstSlide-text" v-html="title"></p>
+            </div>
+            <div class="slider slider__image slider__image-back">
+                <picture>
+                    <source media="(max-width: 500px)" :srcset="firstPicture.small">
+                    <source media="(max-width: 1000px)" :srcset="firstPicture.medium">
+                    <img class="slider slider__image" :src="firstPicture">
+                </picture> 
                 <div class="slider slider__firstSlide slider__firstSlide-title">
                     <p class="slider slider__firstSlide-text" v-html="title"></p>
                 </div>
-                <div class="slider slider__image slider__image-back">
-                    <img class="slider slider__image" :src="firstPicture"> 
-                    <div class="slider slider__firstSlide slider__firstSlide-title">
-                    <p class="slider slider__firstSlide-text" v-html="title"></p>
-                    </div>
-                </div>     
+            </div>     
         </splide-slide>
         <!-- All SLIDES -->
         <splide-slide v-for="(slide, index) in slidesAndTexts" :key="slide.imageURL">
+            <picture>
+                <source media="(max-width: 500px)" :srcset="slide.imageURLSmall">
+                <source media="(max-width: 1000px)" :srcset="slide.imageURLMedium">
                 <img class="slider slider__image slider__image-front" :src="slide.imageURL" :alt="slide.imageAlt">
-                    <font-awesome-icon class="slider slider__tooltip" :class="{'slider__tooltip-first-slide': index === 0}" :icon="['fas', 'hand-point-up']" size="lg" />
+            </picture>
+                <font-awesome-icon class="slider slider__tooltip" :class="{'slider__tooltip-first-slide': index === 0}" :icon="['fas', 'hand-point-up']" size="lg" />
                 <div class="slider slider__text-box-front" v-bind:class="{ 'slider--is-left': slide.position }">
                     <p class="slider slider__text" v-html="slide.text"></p>
                 </div>
             <div class="slider slider__image slider__image-back" @click="turnImage" >  
-                <img class="slider slider__image" :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'slider--hide-image': hideImage}" >   
+                <picture>
+                    <source media="(max-width: 500px)" :srcset="slide.imageURLSmall">
+                    <source media="(max-width: 1000px)" :srcset="slide.imageURLMedium">
+                    <img class="slider slider__image" :src="slide.imageURL" :alt="slide.imageAlt" v-bind:class="{'slider--hide-image': hideImage}" >   
+                </picture>
                 <div class="slider slider__text-box-back" v-bind:class="{'slider--text-is-visible': isVisible}" >
                     <p class="slider slider__text" v-html="slide.text"></p>
                 </div>
@@ -72,7 +88,7 @@ export default {
         id: Number,
         title: String,
         quiz: [Array, Boolean],
-        firstPicture: [String, Boolean],
+        firstPicture: Object,
         video: String,
         lang: String
        
@@ -433,10 +449,11 @@ $breakpoint-phone: 430px;
 
     .slider {
         &__heading {
-            font-size: 1.5em;
+            font-size: 1.3em;
+            margin: 0 0.1em;
         }
         &__link-text {
-            font-size: 1.3em;
+            font-size: 1.2em;
         }  
 
         &__tooltip-first-slide {

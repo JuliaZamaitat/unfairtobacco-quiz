@@ -1,7 +1,7 @@
 <template>
-    <div class="diashow diashow--diashow" :class="{'closed': !showSlider}" :style="{ backgroundImage: 'url(' + thumbnailMedium + ')' }" @click.self="toggleSlides" >
+    <div class="diashow diashow--diashow" :class="{'closed': !showSlider}" :style="{ backgroundImage: 'url(' + thumbnails.small + ')' }" @click.self="toggleSlides" >
         <h2 class="diashow diashow__title" @click.self="toggleSlides">{{ title }}</h2>
-        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnailLarge" :video="videoUrl" :lang="lang"></Slider>
+        <Slider class="diashow diashow__slider" v-if="showSlider" @hide-slides="toggleSlides" :slides="slides" :id="id" :title="title" :quiz="quiz" :firstPicture="thumbnails" :video="videoUrl" :lang="lang"></Slider>
     </div>
 </template>
 
@@ -35,14 +35,10 @@ export default {
          } 
     },
     computed: {
-        thumbnailMedium() {
-            return this.thumbnail.sizes.medium
-        },
-        thumbnailLarge() {
-            return this.thumbnail.sizes["1536x1536"]
+        thumbnails() {
+            return { small: this.thumbnail.sizes.medium, medium: this.thumbnail.sizes.large, large: this.thumbnail.sizes["1536x1536"]}
         }
     }
-
 }
 </script>
 

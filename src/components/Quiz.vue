@@ -456,7 +456,6 @@ $grey-background:rgba(128,127,127,1);
         padding-top: 45px;
         margin: 0 auto;
         position: relative;
-
     }
 
     &__question {
@@ -471,7 +470,6 @@ $grey-background:rgba(128,127,127,1);
             visibility: hidden;
             position: relative;
         }
-
 
         &-explanation {
             font-style: italic;
@@ -499,12 +497,12 @@ $grey-background:rgba(128,127,127,1);
         }
 
         &--congrats {
-             background-color: $correct-answer;
+            background-color: $correct-answer;
              
         }
 
         &--no-congrats {
-             background-color:$false-answer;
+            background-color:$false-answer;
         }
 
         &--background {
@@ -672,7 +670,6 @@ $grey-background:rgba(128,127,127,1);
                     width: 200px !important;
                     display: inline-block !important;
                     height: 100% !important;
-
                 } 
                 .answer--correct {
                      border: 2px solid $correct-answer;
@@ -772,7 +769,7 @@ $grey-background:rgba(128,127,127,1);
         font-weight: bold;
         font-size: 18px;
         margin: 0 auto;
-        margin-top: 230px;
+        margin-top: 240px;
         width: 80%;
         line-height: 160%;
         
@@ -793,14 +790,13 @@ $grey-background:rgba(128,127,127,1);
 
         &--try-again {
             font-weight: bold;
-            margin-top: 50px;
+            margin-top: 60px;
             margin-bottom: 70px;
         }
     }
 
     .router-link-active{
        color: black;
-        
     }
 
     &__finished-try-again {
@@ -812,7 +808,6 @@ $grey-background:rgba(128,127,127,1);
         margin-top: 50px;
         margin-bottom: 40px;
         font-size: 16px;
-
     }
 }
 
