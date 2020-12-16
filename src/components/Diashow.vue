@@ -49,8 +49,6 @@ export default {
 <style lang="scss" scoped>
 
 .diashow {
-
-     
     &--diashow {
         position: relative;
         background-size: cover;

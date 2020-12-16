@@ -157,8 +157,6 @@ export default {
             color: rgb(255, 255, 255, 0.7);
         }
     }
-
-    
     &__tooltip {
         display: none;
     }
@@ -214,8 +212,6 @@ export default {
         font-weight: bold;
         color: #FFFFFF;
         font-size: 20px;
-        
-       
     }
 
     &__text-box-front {
@@ -232,7 +228,6 @@ export default {
         left: 12%; 
     }
 
-
     &__text-box-back { 
         position: absolute;
         width: 80%;
@@ -244,7 +239,6 @@ export default {
         transform: translateY(-50%);
         display: none;
         background: rgba(143, 44, 27, 1);
-        
     }
 
     &__text { 
@@ -256,8 +250,6 @@ export default {
         text-align: left;
         padding: 0 1em;
     }
-
-
 
    /* Last Slide */
 
@@ -440,10 +432,16 @@ $breakpoint-phone: 430px;
     }
 
     .slider {
-         &__tooltip-first-slide {
+        &__heading {
+            font-size: 1.5em;
+        }
+        &__link-text {
+            font-size: 1.3em;
+        }  
+
+        &__tooltip-first-slide {
             display: block;
             animation: zoomInOut 3s infinite;
-
         }
 
         &__image { 
@@ -484,6 +482,14 @@ $breakpoint-phone: 430px;
 @media only screen and (max-width: 850px) and (max-height: 450px)
  and (orientation: landscape) {
     .slider {
+        &__heading {
+            font-size: 1.5em;
+        }
+
+        &__link-text {
+            font-size: 1.3em;
+        }  
+
         &__tooltip-first-slide {
             display: block;
             animation: zoomInOut 3s infinite; 
@@ -516,7 +522,15 @@ $breakpoint-phone: 430px;
         &__text { 
             font-size: 14px;
         }
+        &__follow {
+            font-size: 1em;
+            padding-top: 0
+        }
 
+        &__icon { 
+            font-size: 2.5em;
+            margin: 0.1em 0.15em;
+        }
     }
 }
 
