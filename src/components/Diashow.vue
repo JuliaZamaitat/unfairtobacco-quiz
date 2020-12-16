@@ -23,7 +23,6 @@ export default {
         videoUrl: String,
         lang: String
     },
-
     data () {
         return {
             showSlider: false
@@ -85,6 +84,4 @@ export default {
 
     }
 }
-
-
 </style>

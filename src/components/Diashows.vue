@@ -27,10 +27,10 @@ import axios from 'axios'
 const url = 'https://unfairtobacco.org/wp-json/endpoint/v1/'
 
 export default {
+  name: 'Diashows',
   components: {
     Diashow
   },
-  name: 'Diashows',
   data () {
     return {
       lang: "de",
@@ -49,12 +49,10 @@ export default {
         .then((diashows) => { this.loading = false; this.diashows = diashows.data })
         .catch((err) => console.log(err))
       },
-
     groupedDiashows(klassenstufe) {
         return this.diashows
             .filter(diashow => diashow.acf.diashow_klassenstufe[0].name === klassenstufe)
     },
-
   },
   computed: {
     klassenstufen() {
@@ -70,7 +68,6 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 
 .diashows {

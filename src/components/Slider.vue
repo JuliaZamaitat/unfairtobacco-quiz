@@ -74,15 +74,14 @@
 
 <script>
 import "@splidejs/splide/dist/css/themes/splide-default.min.css";
-
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 
 export default {
+    name: 'Slider',
     components: {
         Splide,
         SplideSlide,
     },
-    name: 'Slider',
     props: {
         slides: [Array, Boolean],
         id: Number,
@@ -91,9 +90,7 @@ export default {
         firstPicture: Object,
         video: String,
         lang: String
-       
     },
-    
     data() {
         return {
             textIsLeft: true,
@@ -338,9 +335,6 @@ export default {
 
 }
 
-$breakpoint-phone: 430px;
-
-
 @media  only screen and (max-width : 1200px) and (orientation: portrait){
  .slider {
       &__tooltip-first-slide {
@@ -385,7 +379,6 @@ $breakpoint-phone: 430px;
         &__tooltip-first-slide {
             display: block;
             animation: zoomInOut 3s infinite;
- 
         }
 
          &__image { 
@@ -438,11 +431,10 @@ $breakpoint-phone: 430px;
             font-size: 11px;
         }
     }
-        
 }
 
 //Smartphone Portrait smaller
-@media only screen and (max-width: $breakpoint-phone) and (orientation: portrait) {
+@media only screen and (max-width: 430px) and (orientation: portrait) {
     .splide__arrows--mobile { //not working
         display: none !important;
     }
@@ -484,14 +476,12 @@ $breakpoint-phone: 430px;
     }
 }
 
-
 // Tablet Landscape
 @media only screen and (max-width: 850px) and (orientation: landscape) {
     .slider {
           &__text { 
             font-size: 11px;
-        }
-        
+        } 
     }  
 }
 
