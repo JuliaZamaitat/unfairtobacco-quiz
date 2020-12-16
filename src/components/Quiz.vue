@@ -7,20 +7,19 @@
       <div v-if="!this.quizFinished" class="quiz quiz__container">
     
     <!-- Frage -->
-        
         <div class="quiz quiz__question">
             <div class="quiz quiz__question--background">
                 <p v-html="currentQuestion"></p> 
             </div>
         </div>
-         <div class="quiz quiz__question quiz__question-hidden"><p v-html="currentQuestion"></p></div> 
+         <div class="quiz quiz__question quiz__question-hidden"><p v-html="currentQuestion"></p></div> <!--to have the right margins to the elements below-->
 
     <!-- Task for question -->   
         <p v-if="!this.isValidated" class="quiz quiz__question-explanation" v-html="currentTask"></p>
-        <p v-if="this.isValidated" class="quiz quiz__question-explanation" :class="{'quiz__question--correct-solution': this.correct, 'quiz__question--false-solution': !this.correct }" v-html="solutionText()"></p> 
+        <p v-if="this.isValidated" class="quiz quiz__question-explanation" :class="{'quiz__question--correct-solution': this.correct, 'quiz__question--false-solution': !this.correct }" v-html="solutionText"></p> 
 
     <!-- ANSWERS -->
-    
+
        <!-- MULTIPLE CHOICE -->
         <div v-if="quizType === 'multiple_choice'" class="quiz quiz__answers quiz__multiple-choice">
             <ul class="quiz quiz__answers-multiple-list">
@@ -39,7 +38,6 @@
             </ul>
         </div>
 
-
         <!-- FREE TEXT -->
         <div v-if="quizType === 'free_answer'" class="quiz quiz__answers quiz__free-answer">
             <textarea v-model="freeAnswer" class="quiz quiz__answers-free-answer-input" 
@@ -47,17 +45,17 @@
                     :keyup="toggleAnswer(undefined)"
                     :disabled="isValidated">
             </textarea>
-            <p v-if="this.isValidated" class="quiz quiz__answers-free-answer-solution-heading">Eine mögliche Antwort von uns</p>
+            <p v-if="this.isValidated && lang === 'de'" class="quiz quiz__answers-free-answer-solution-heading">Eine mögliche Antwort von uns</p>
+            <p v-if="this.isValidated && lang !== 'de'" class="quiz quiz__answers-free-answer-solution-heading">One possible answer from us</p>
             <p v-if="this.isValidated" v-html="this.ourAnswer" class="quiz quiz__answers-free-answer-solution"></p>
         </div>
-
 
         <!-- LUECKENTEXT -->
         <div v-if="quizType === 'lueckentext'" class="quiz quiz__answers-lueckentext">
             <p v-for="(textUndLuecke, index) in currentAnswers" class="quiz quiz__answers-lueckentext-text-luecke" :key="index">
             {{ textUndLuecke.luecke_text }} 
             <!-- NOT YET VALIDATED -->
-            <select v-if="!isValidated" @change="setSelected($event.target.value)" class="quiz quiz__answers-lueckentext-select">
+            <select v-if="!isValidated" @change="toggleAnswer($event.target.value)" class="quiz quiz__answers-lueckentext-select">
                 <option hidden disabled selected value></option>
                  <option v-for="(tL, i) in currentAnswers" v-bind:value="[tL.luecke_luecke, textUndLuecke.luecke_luecke, index]" :key="i" >
                     {{ tL.luecke_luecke }}
@@ -70,7 +68,6 @@
             </p>
         </div>
 
-
         <!-- ZUORDNEN -->
         <div v-if="quizType === 'connection_quiz'" class="quiz quiz__answers-connection-quiz">
             <!-- DROP AREA -->
@@ -78,7 +75,7 @@
                 <div v-for="(liste, i) in draggableLists" :key="liste.id">
                      <p class="expression">{{ storedAnswers[i].connection_expression }}</p>
                     <div class="drop-area">
-                        <draggable group="drop-quiz" :list="liste" @change="disable(liste)">
+                        <draggable group="drop-quiz" :list="liste" @change="checkOnlyOneSelected(liste)">
                             <div class="descriptions" v-for="item in liste" :key="item.id">
                                 {{ item ? item.connection_description : item }}
                             </div>
@@ -107,7 +104,6 @@
                 </div>
             </div>
         </div>
-
 
     <!-- FOOTER -->
         <p v-if="!this.answerSelected && !this.isValidated" class="quiz quiz__question-count">Frage {{ currentQuestionIndex + 1 }} von {{ questionCount }}</p>
@@ -138,8 +134,6 @@
             </div>
             <p v-if="lang === 'de'" class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
             <p v-else class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Back to diashows</a></router-link></p>
-
-
         </div>
         <!-- NEGATIVE SCREEN -->
         <div v-else-if="this.quizFinished" class="quiz quiz__container">
@@ -155,16 +149,13 @@
             <button v-else class="quiz quiz__finished-try-again" @click="resetData()">Try again</button>
             <p  v-if="lang === 'de'" class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Zurück zur Diashow-Übersicht</a></router-link></p>
             <p v-else class="quiz quiz__link-text"><router-link :to="{name: 'Diashows'}"><a class="quiz quiz__link">Back to diashows</a></router-link></p>
-
         </div>
+
     </div>
-
-
 </template>
 
 <script>
-  import draggable from 'vuedraggable'
-
+import draggable from 'vuedraggable'
 
 export default {
     components: {
@@ -175,7 +166,6 @@ export default {
         quiz: Array,
         lang: String
     },
-
     data () {
         return {
             questionCount: null,
@@ -196,16 +186,7 @@ export default {
     },
     watch: {
         currentQuestionIndex: function () {
-            if (this.quizType === "lueckentext") {
-                const luecken = []
-                const lueckentext = this.quiz[this.currentQuestionIndex].lueckentext_text;
-                for(var luecke in lueckentext){
-                    luecken.push(lueckentext[luecke].luecke_luecke)
-                }
-             this.dropdownOptions = luecken
-            }
-
-            if(this.quizType === "connection_quiz"){
+            if(this.quizType === "connection_quiz") { //don't move to currentAnswers, as the dropdown relies on no sideeffects there
                  const connectionPairs = this.quiz[this.currentQuestionIndex].connection_pair;
                  for(var pair in connectionPairs){
                     const emptyArray = []
@@ -223,21 +204,29 @@ export default {
         resetData() {
             Object.assign(this.$data, this.$options.data.call(this));
             this.questionCount = this.quiz.length
-
         },
-        disable(){
-            this.answerSelected = true
-            this.onlyOneSelected = true
-            for(var liste in this.draggableLists) {
-                if(this.draggableLists[liste].length > 1) this.onlyOneSelected = false;
-            }
-           
-        },
-        toggleAnswer(answer) {
+        toggleAnswer(answer) { //multiple choice & lueckentext & free text
             if(answer === undefined && this.quizType === "free_answer" && this.freeAnswer?.length > 1) {
                 this.answerSelected = true
                 return
             }
+            if(this.quizType === "lueckentext") {
+                const values = answer.split(",")
+                const selectedValue = values[0]
+                const actualValue = values[1]
+                const index = values[2] //The index of the text paragraph
+                //check if a value for a paragraph with that id was added before
+                for(var element in this.correctLuecke){
+                    if (this.correctLuecke[element]?.id === index) this.correctLuecke[element] = null;       
+                }
+
+                if (selectedValue === actualValue) this.correctLuecke.push({id: index, correct: true})
+                else this.correctLuecke.push({id: index, correct: false})
+
+                this.answerSelected = true
+                return
+             }
+
             if (this.answerSelected === answer) {
                 this.answerSelected = null
             } else {
@@ -247,8 +236,6 @@ export default {
         validateAnswers() {
             this.isValidated = true;
             window.scrollTo(0,0);  
-
-
             switch (this.quizType) {
                 case "multiple_choice": 
                     if (this.isCorrect(this.answerSelected)) {
@@ -258,22 +245,22 @@ export default {
                     break
                 case "lueckentext": {
                     const filtered = this.correctLuecke.filter(Boolean); //remove empty entries
-                    console.log(filtered);
                     for(var i in filtered){
                         if (filtered[i].correct === false) {
-                            console.log("here")
+                            this.correct = false;
+                            return
+                        } else if (filtered.length < this.dropdownOptions.length) {
                             this.correct = false;
                             return
                         }
                     }
                     this.correct = true
                     this.correctAnswersCount += 1
-                
                     break
                 }
                 case "free_answer":
                     this.correctAnswersCount += 1
-                    this.correct = true
+                    this.correct = true //always correct
                    break
                 case "connection_quiz":
                     this.correct = true   
@@ -306,6 +293,13 @@ export default {
                    return false  
             }
         },
+        checkOnlyOneSelected(){
+            this.answerSelected = true
+            this.onlyOneSelected = true
+            for(var liste in this.draggableLists) {
+                if(this.draggableLists[liste].length > 1) this.onlyOneSelected = false;
+            } 
+        },
         getNextQuestion() {
             this.currentQuestionIndex += 1
             this.isValidated = false
@@ -317,47 +311,15 @@ export default {
             this.draggableLists = []
             this.storedAnswers = []
             this.answerSelected = null
+            this.onlyOneSelected = false
             if (this.currentQuestionIndex === this.questionCount) {
                 this.quizFinished = true
                 if((this.correctAnswersCount * 100 / this.questionCount) > 70) {
                      this.$confetti.start();
                     setTimeout(() => this.$confetti.stop(), 3000);
                 }
-            }
-          
+            }  
         },
-        setSelected(value) { //fuer lueckentext
-            const values = value.split(",")
-            const selectedValue = values[0]
-            const actualValue = values[1]
-            const index = values[2] //The index of the text paragraph
-            
-            //check if a value for a paragraph with that id was added before
-            for(var element in this.correctLuecke){
-                if (this.correctLuecke[element]?.id === index) this.correctLuecke[element] = null;       
-            }
-
-            if (selectedValue === actualValue) this.correctLuecke.push({id: index, correct: true})
-            else this.correctLuecke.push({id: index, correct: false})
-               
-            this.answerSelected = true
-        },
-        solutionText() { 
-            const question = this.quiz[this.currentQuestionIndex]
-             switch (this.quizType) {
-                 case "multiple_choice":
-                   return this.correct ? question.multiple_aufloesung[0].positive_answer : question.multiple_aufloesung[0].negative_answer
-                case "lueckentext":
-                    return this.correct ? question.lueckentext_aufloesung[0].positive_answer : question.lueckentext_aufloesung[0].negative_answer
-                case "free_answer":
-                    this.ourAnswer = question.our_answer
-                    return question.free_aufloesung[0].positive_answer
-                case "connection_quiz":
-                    return this.correct ? question.connection_aufloesung[0].positive_answer : question.connection_aufloesung[0].negative_answer
-                default:
-                   return ""  
-            }
-        }
     },
     computed: {
         quizType() {
@@ -379,10 +341,18 @@ export default {
         },
         currentAnswers() {
             switch (this.quizType) {
-                 case "multiple_choice": 
+                case "multiple_choice": 
                     return this.quiz[this.currentQuestionIndex].multiple_answers_text || this.quiz[this.currentQuestionIndex].multiple_answers_images
-                case "lueckentext":
-                    return this.quiz[this.currentQuestionIndex].lueckentext_text
+                case "lueckentext": {
+                    const lueckentext = this.quiz[this.currentQuestionIndex].lueckentext_text
+                    const luecken = []
+                    for(var luecke in lueckentext){
+                        luecken.push(lueckentext[luecke].luecke_luecke)
+                    }
+                    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                    this.dropdownOptions = luecken
+                    return lueckentext
+                }
                 case "free_answer":
                     return this.quiz[this.currentQuestionIndex].free_aufloesung
                 case "connection_quiz": {
@@ -412,6 +382,23 @@ export default {
                    return ""  
             }
         },
+        solutionText() { 
+            const question = this.quiz[this.currentQuestionIndex]
+             switch (this.quizType) {
+                 case "multiple_choice":
+                   return this.correct ? question.multiple_aufloesung[0].positive_answer : question.multiple_aufloesung[0].negative_answer
+                case "lueckentext":
+                    return this.correct ? question.lueckentext_aufloesung[0].positive_answer : question.lueckentext_aufloesung[0].negative_answer
+                case "free_answer":
+                    // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                    this.ourAnswer = question.our_answer
+                    return question.free_aufloesung[0].positive_answer
+                case "connection_quiz":
+                    return this.correct ? question.connection_aufloesung[0].positive_answer : question.connection_aufloesung[0].negative_answer
+                default:
+                   return ""  
+            }
+        }
     }
 }
 </script>
@@ -770,6 +757,7 @@ $grey-background:rgba(128,127,127,1);
         padding: 8px 23px 6px;
         margin-top: 25px;
         cursor: pointer;
+        background-color: rgba(0,0,0,0);
         transition: background-color .2s ease-out;
 
         &:hover, &:focus, &:active {
@@ -904,11 +892,10 @@ $grey-background:rgba(128,127,127,1);
              font-size: 14px;
              margin-top: 40px;
          }
-        
 
     &__finished-text {
         margin-top: 50px;
-    }
+        }
     }
 }
 </style>
