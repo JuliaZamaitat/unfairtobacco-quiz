@@ -359,9 +359,6 @@ export default {
                     }
                     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                     this.dropdownOptions = this.shuffle([...lueckentext])
-                    // this.dropdownOptions = this.shuffle(luecken)
-                    console.log(this.dropdownOptions)
-                    console.log(lueckentext)
                     return lueckentext
                 }
                 case "free_answer":
