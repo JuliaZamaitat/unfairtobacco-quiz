@@ -57,7 +57,7 @@
             <!-- NOT YET VALIDATED -->
             <select v-if="!isValidated" @change="toggleAnswer($event.target.value)" class="quiz quiz__answers-lueckentext-select">
                 <option hidden disabled selected value></option>
-                 <option v-for="(tL, i) in currentAnswers" v-bind:value="[tL.luecke_luecke, textUndLuecke.luecke_luecke, index]" :key="i" >
+                 <option v-for="(tL, i) in dropdownOptions" v-bind:value="[tL.luecke_luecke, textUndLuecke.luecke_luecke, index]" :key="i" >
                     {{ tL.luecke_luecke }}
                 </option>
             </select>
@@ -211,6 +211,7 @@ export default {
                 return
             }
             if(this.quizType === "lueckentext") {
+                console.log(answer)
                 const values = answer.split(",")
                 const selectedValue = values[0]
                 const actualValue = values[1]
@@ -320,6 +321,13 @@ export default {
                 }
             }  
         },
+    shuffle(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
     },
     computed: {
         quizType() {
@@ -350,7 +358,10 @@ export default {
                         luecken.push(lueckentext[luecke].luecke_luecke)
                     }
                     // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-                    this.dropdownOptions = luecken
+                    this.dropdownOptions = this.shuffle([...lueckentext])
+                    // this.dropdownOptions = this.shuffle(luecken)
+                    console.log(this.dropdownOptions)
+                    console.log(lueckentext)
                     return lueckentext
                 }
                 case "free_answer":
@@ -362,7 +373,9 @@ export default {
                     for(var pair in connectionPairs){
                         answers.push(connectionPairs[pair])
                     }
-                    return answers
+                    let a = this.shuffle(answers);
+                    return a
+                    // return answers
                 }
                 default:
                    return []  
